@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,14 +9,13 @@ use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 
-
 class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->roles == 'admin';
+        return $this->roles === 'admin';
     }
 
     /**
@@ -44,24 +42,21 @@ class User extends Authenticatable implements FilamentUser
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
-    public function transaction()
+    public function transactions()
     {
         return $this->hasMany(Transaction::class);
     }
 
-    public function booking()
+    public function bookings()
     {
         return $this->hasMany(Booking::class);
     }

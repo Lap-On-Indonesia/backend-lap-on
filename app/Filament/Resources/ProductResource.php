@@ -23,7 +23,6 @@ class ProductResource extends Resource
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
     public static function form(Form $form): Form
     {
         return $form
@@ -48,6 +47,12 @@ class ProductResource extends Resource
                     ->minValue(0)
                     ->step(0.01)
                     ->required(),
+                Forms\Components\FileUpload::make('image')
+                    ->label('Image')
+                    ->image()
+                    ->disk('public') // Gunakan disk yang sesuai dengan konfigurasi Anda
+                    ->directory('images/products') // Direktori tempat gambar disimpan
+                    ->required(), // Tambahkan jika Anda ingin menjadikannya wajib
             ]);
     }
 
@@ -63,8 +68,13 @@ class ProductResource extends Resource
                 TextColumn::make('price')
                     ->label('Harga')
                     ->money('IDR', true),
-                TextColumn::make('description')
-
+                TextColumn::make('description'),
+                Tables\Columns\ImageColumn::make('image') // Menambahkan kolom gambar di tabel
+                    ->label('Image')
+                    ->disk('public') // Gunakan disk yang sesuai dengan konfigurasi Anda
+                    ->directory('images/products') // Direktori tempat gambar disimpan
+                    ->width(100) // Lebar gambar, sesuaikan dengan kebutuhan
+                    ->height(100), // Tinggi gambar, sesuaikan dengan kebutuhan
             ])
             ->filters([
                 //

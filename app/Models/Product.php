@@ -13,10 +13,10 @@ class Product extends Model
     public $timestamps = true;
     protected $fillable = [
         'name_product',
-        'owner_marketplace_id',
-        'category_marketplace_id', // pastikan kolom ini ada
+        'category_marketplace_id',
         'description',
         'price',
+        'image', // Tambahkan kolom image ke sini
     ];
 
     public function categoryMarketplace()

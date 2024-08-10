@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id('product_id');
             $table->string('name_product');
-            $table->foreignId('owner_marketplace_id');
-            $table->foreign('owner_marketplace_id')->references('id')->on('owner_marketplaces')->onDelete('cascade');
             $table->foreignId('category_marketplace_id');
             $table->foreign('category_marketplace_id')->references('id')->on('category_marketplaces')->onDelete('cascade');
             $table->text('description')->nullable();

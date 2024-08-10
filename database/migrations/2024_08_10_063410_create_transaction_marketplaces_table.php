@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('product_id');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->decimal('total', 20)->nullable();
+            $table->foreign('product_id')->references('product_id')->on('products')->onDelete('cascade');
+            $table->decimal('total', 20, 2)->nullable();
             $table->string('status', 10);
             $table->string('payment_url', 255);
             $table->timestamps();
