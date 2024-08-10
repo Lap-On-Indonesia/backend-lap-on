@@ -2,24 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BannerResource\Pages;
-use App\Filament\Resources\BannerResource\RelationManagers;
-use App\Models\Banner;
+use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class BannerResource extends Resource
+class UserResource extends Resource
 {
-    protected static ?string $model = Banner::class;
+    protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -27,18 +25,23 @@ class BannerResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')
+                TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
-                FileUpload::make('image_url')
-                    ->label('Image Upload')
-                    ->disk('public')
-                    ->directory('banner')
-                    ->image()
+                    ->label('Nama'),
+                TextInput::make('email')
+                    ->label('Email')
+                    ->required()
+                    ->email()
+                    ->unique(ignorable: fn($record) => $record)
+                    ->visibleOn('create'),
+                TextInput::make('phone')
+                    ->label('No.Telp')
                     ->required(),
-                TextInput::make('link_url')
+                TextInput::make('password')
+                    ->label('Password')
                     ->required()
-                    ->maxLength(255),
+                    ->password()
+                    ->visibleOn('create'),
             ]);
     }
 
@@ -46,15 +49,12 @@ class BannerResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('title')
-                    ->searchable()
-                    ->sortable(),
-                ImageColumn::make('image_url')
-                    ->label('Image')
-                    ->width(100)
-                    ->height(100),
-                TextColumn::make('link_url')
-                    ->label('Link'),
+                TextColumn::make('name')
+                    ->label('Nama'),
+                TextColumn::make('email')
+                    ->label('Email'),
+                TextColumn::make('phone')
+                    ->label('No.Telp'),
             ])
             ->filters([
                 //
@@ -79,9 +79,9 @@ class BannerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBanners::route('/'),
-            'create' => Pages\CreateBanner::route('/create'),
-            'edit' => Pages\EditBanner::route('/{record}/edit'),
+            'index' => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 }

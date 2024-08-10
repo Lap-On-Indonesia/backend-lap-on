@@ -17,4 +17,9 @@ class Owner extends Model
         'photo_ktp',
         'password',
     ];
+
+    public function venue()
+    {
+        return $this->hasMany(Venue::class);
+    }
 }

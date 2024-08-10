@@ -11,6 +11,7 @@ class Venue extends Model
 
     protected $fillable = [
         'category_id',
+        'owner_id',
         'name',
         'description',
         'image',
@@ -21,5 +22,20 @@ class Venue extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class);
+    }
+
+    public function booking()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

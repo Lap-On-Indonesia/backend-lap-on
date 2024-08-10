@@ -55,4 +55,14 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
         ];
     }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function booking()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

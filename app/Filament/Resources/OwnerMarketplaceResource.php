@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\OwnerResource\Pages;
-use App\Filament\Resources\OwnerResource\RelationManagers;
-use App\Models\Owner;
+use App\Filament\Resources\OwnerMarketplaceResource\Pages;
+use App\Filament\Resources\OwnerMarketplaceResource\RelationManagers;
+use App\Models\OwnerMarketplace;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
@@ -18,9 +18,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 
-class OwnerResource extends Resource
+class OwnerMarketplaceResource extends Resource
 {
-    protected static ?string $model = Owner::class;
+    protected static ?string $model = OwnerMarketplace::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -42,13 +42,13 @@ class OwnerResource extends Resource
                     ->label('Foto Profile')
                     ->disk('public')
                     ->image()
-                    ->directory('photo_profile_owner')
+                    ->directory('photo_profile_marketplace')
                     ->required(),
                 FileUpload::make('photo_ktp')
                     ->label('Foto KTP')
                     ->disk('public')
                     ->image()
-                    ->directory('owner_ktp_owner')
+                    ->directory('owner_ktp_marketplace')
                     ->required(),
                 TextInput::make('password')
                     ->password()
@@ -92,9 +92,9 @@ class OwnerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOwners::route('/'),
-            'create' => Pages\CreateOwner::route('/create'),
-            'edit' => Pages\EditOwner::route('/{record}/edit'),
+            'index' => Pages\ListOwnerMarketplaces::route('/'),
+            'create' => Pages\CreateOwnerMarketplace::route('/create'),
+            'edit' => Pages\EditOwnerMarketplace::route('/{record}/edit'),
         ];
     }
 }

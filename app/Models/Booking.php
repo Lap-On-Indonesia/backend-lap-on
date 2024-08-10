@@ -12,11 +12,28 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'venue_id',
-        'category_id',
         'booking_date',
         'start_time',
         'end_time',
         'tax_percentage',
         'total_payment'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the venue that owns the booking.
+     */
+    public function venue()
+    {
+        return $this->belongsTo(Venue::class);
+    }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }
