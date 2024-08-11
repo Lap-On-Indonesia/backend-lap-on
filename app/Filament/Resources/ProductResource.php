@@ -17,8 +17,6 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProductResource extends Resource
 {
@@ -53,9 +51,9 @@ class ProductResource extends Resource
                 FileUpload::make('image')
                     ->label('Image')
                     ->image()
-                    ->disk('public') // Gunakan disk yang sesuai dengan konfigurasi Anda
-                    ->directory('product') // Direktori tempat gambar disimpan
-                    ->required(), // Ta
+                    ->disk('public')
+                    ->directory('product')
+                    ->required(),
             ]);
     }
 
@@ -63,19 +61,21 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name_product'),
-                TextColumn::make('category_marketplace.name')
+                TextColumn::make('name_product')
+                    ->label('Nama Produk'),
+                TextColumn::make('categoryMarketplace.name')
                     ->label('Category Marketplace')
                     ->searchable()
                     ->sortable(),
-                ImageColumn::make('image') // Menambahkan kolom gambar di tabel
+                ImageColumn::make('image')
                     ->label('Image')
-                    ->width(100) // Lebar gambar, sesuaikan dengan kebutuhan
-                    ->height(100), // T
+                    ->width(100)
+                    ->height(100),
                 TextColumn::make('price')
                     ->label('Harga')
                     ->money('IDR', true),
-                TextColumn::make('description'),
+                TextColumn::make('description')
+                    ->label('Deskripsi'),
             ])
             ->filters([
                 //

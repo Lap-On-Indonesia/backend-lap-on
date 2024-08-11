@@ -1,5 +1,7 @@
 <?php
 
+// TransactionMarketplaceResource.php
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TransactionMarketplaceResource\Pages;
@@ -56,7 +58,7 @@ class TransactionMarketplaceResource extends Resource
                     ->label('User')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('product.name_product')
+                TextColumn::make('product.name_product') // Mengakses nama produk
                     ->label('Product')
                     ->searchable()
                     ->sortable(),

@@ -17,7 +17,7 @@ class WithdrawRequest extends Model
     ];
 
     public function transactionMarketplace()
-    {
-        return $this->belongsTo(TransactionMarketplace::class);
-    }
+{
+    return $this->belongsTo(TransactionMarketplace::class, 'transaction_marketplace_id');
+}
 }

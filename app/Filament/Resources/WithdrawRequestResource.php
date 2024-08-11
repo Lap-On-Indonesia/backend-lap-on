@@ -53,7 +53,7 @@ class WithdrawRequestResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('transaction_marketplace.id')
+                TextColumn::make('transactionMarketplace.id') // Memastikan nama relasi yang benar
                     ->label('Transaction Marketplace')
                     ->searchable()
                     ->sortable(),
@@ -75,6 +75,7 @@ class WithdrawRequestResource extends Resource
                 ]),
             ]);
     }
+
 
     public static function getRelations(): array
     {
