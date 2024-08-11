@@ -63,6 +63,7 @@ class VenueResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('owner.name')->label('Owner')->searchable(),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('description'),
                 TextColumn::make('category.name')->label('Category'),

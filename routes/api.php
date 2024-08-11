@@ -1,26 +1,27 @@
 <?php
 
-use App\Http\Controllers\API\ArtikelController;
-use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\BannerController;
-use App\Http\Controllers\API\BookingController;
-use App\Http\Controllers\API\CategoryController;
-use App\Http\Controllers\API\CategoryMarketplaceController;
-use App\Http\Controllers\API\CodeCheckController;
-use App\Http\Controllers\API\ForgotPasswordController;
-use App\Http\Controllers\API\HistoryTransactionController;
-use App\Http\Controllers\API\ImagePropertyController;
-use App\Http\Controllers\API\InquiryController;
-use App\Http\Controllers\API\KprSimulateController;
-use App\Http\Controllers\API\NotificationController;
-use App\Http\Controllers\API\ProductController;
-use App\Http\Controllers\API\PropertyController;
-use App\Http\Controllers\API\ResetPasswordController;
-use App\Http\Controllers\API\TransactionController;
-use App\Http\Controllers\API\TransactionMarketplaceController;
-use App\Http\Controllers\API\VenueController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\VenueController;
+use App\Http\Controllers\API\BannerController;
+use App\Http\Controllers\API\ArtikelController;
+use App\Http\Controllers\API\BookingController;
+use App\Http\Controllers\API\InquiryController;
+use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\PropertyController;
+use App\Http\Controllers\API\CodeCheckController;
+use App\Http\Controllers\API\KprSimulateController;
+use App\Http\Controllers\API\TransactionController;
+use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\ImagePropertyController;
+use App\Http\Controllers\API\ResetPasswordController;
+use App\Http\Controllers\API\ForgotPasswordController;
+use App\Http\Controllers\API\HistoryTransactionController;
+use App\Http\Controllers\API\CategoryMarketplaceController;
+use App\Http\Controllers\API\TransactionMarketplaceController;
+use App\Http\Controllers\Auth\RegisterOwnerMarketplaceController;
 
 
 
@@ -58,16 +59,12 @@ Route::middleware(['auth:sanctum', 'response.formatter'])->group(function () {
     Route::post('user/photo', [AuthController::class, 'updatePhoto']);
     Route::post('logout', [AuthController::class, 'logout']);
 
+    Route::get('transactions', [TransactionController::class, 'index']);
     Route::post('transactions', [TransactionController::class, 'store']);
+    Route::get('transactions/{id}', [TransactionController::class, 'show']);
 
     Route::get('history-transactions', [HistoryTransactionController::class, 'index']);
     Route::get('history-transactions/{id}', [HistoryTransactionController::class, 'show']);
-
-    Route::post('bookings', [BookingController::class, 'store']);
-    Route::get('bookings', [BookingController::class, 'index']);
-    Route::get('bookings/{id}', [BookingController::class, 'show']);
-    Route::put('bookings/{id}', [BookingController::class, 'update']);
-    Route::delete('bookings/{id}', [BookingController::class, 'destroy']);
 
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/{id}', [ProductController::class, 'show']);
@@ -112,3 +109,11 @@ Route::get('notifications', [NotificationController::class, 'index']);
 Route::get('notifications/{id}', [NotificationController::class, 'show']);
 Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 Route::delete('notifications/{id}', [NotificationController::class, 'destroy']);
+
+Route::post('bookings', [BookingController::class, 'store']);
+Route::get('bookings', [BookingController::class, 'index']);
+Route::get('bookings/{id}', [BookingController::class, 'show']);
+Route::put('bookings/{id}', [BookingController::class, 'update']);
+Route::delete('bookings/{id}', [BookingController::class, 'destroy']);
+
+Route::post('register-owner-marketplace', [RegisterOwnerMarketplaceController::class, 'register']);

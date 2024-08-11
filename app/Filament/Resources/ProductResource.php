@@ -68,14 +68,14 @@ class ProductResource extends Resource
                     ->label('Category Marketplace')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('price')
-                    ->label('Harga')
-                    ->money('IDR', true),
-                TextColumn::make('description'),
                 ImageColumn::make('image') // Menambahkan kolom gambar di tabel
                     ->label('Image')
                     ->width(100) // Lebar gambar, sesuaikan dengan kebutuhan
                     ->height(100), // T
+                TextColumn::make('price')
+                    ->label('Harga')
+                    ->money('IDR', true),
+                TextColumn::make('description'),
             ])
             ->filters([
                 //

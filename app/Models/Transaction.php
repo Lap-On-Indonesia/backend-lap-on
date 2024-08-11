@@ -18,25 +18,16 @@ class Transaction extends Model
         'payment_url',
     ];
 
-    /**
-     * Get the user that owns the transaction.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the venue that owns the transaction.
-     */
     public function venue()
     {
         return $this->belongsTo(Venue::class);
     }
 
-    /**
-     * Get the booking that owns the transaction.
-     */
     public function booking()
     {
         return $this->belongsTo(Booking::class);

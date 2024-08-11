@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Booking;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Controller;
 
 class BookingController extends Controller
 {
