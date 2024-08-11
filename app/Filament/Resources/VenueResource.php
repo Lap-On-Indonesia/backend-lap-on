@@ -56,6 +56,11 @@ class VenueResource extends Resource
                 TextInput::make('link_maps')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('price') // Tambahkan input untuk price
+                    ->required()
+                    ->numeric()
+                    ->label('Price')
+                    ->placeholder('Enter price'),
             ]);
     }
 
@@ -70,6 +75,9 @@ class VenueResource extends Resource
                 ImageColumn::make('image')->width(100)->height(100),
                 TextColumn::make('address')->searchable(),
                 TextColumn::make('link_maps'),
+                TextColumn::make('price') // Tambahkan kolom price di tabel
+                ->numeric()
+                ->formatStateUsing(fn ($state) => number_format($state, 2, '.', ','))
             ])
             ->filters([
                 //

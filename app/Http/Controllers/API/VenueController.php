@@ -23,12 +23,14 @@ class VenueController extends Controller
             'location' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'owner_id' => 'required|exists:users,id',
+            'price' => 'required|numeric|min:0', // Validasi untuk price
             // Tambahkan validasi lainnya sesuai kebutuhan
         ]);
 
         $venue = Venue::create($request->all());
         return ResponseFormatter::success($venue, 'Venue created successfully', 201);
     }
+
 
     public function show($id)
     {
@@ -43,6 +45,7 @@ class VenueController extends Controller
             'location' => 'sometimes|string|max:255',
             'category_id' => 'sometimes|exists:categories,id',
             'owner_id' => 'sometimes|exists:users,id',
+            'price' => 'sometimes|numeric|min:0', // Validasi untuk price
             // Tambahkan validasi lainnya sesuai kebutuhan
         ]);
 

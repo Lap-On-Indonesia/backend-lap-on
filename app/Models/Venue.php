@@ -17,6 +17,7 @@ class Venue extends Model
         'image',
         'address',
         'link_maps',
+        'price', // Tambahkan kolom price di sini
     ];
 
     public function category()
