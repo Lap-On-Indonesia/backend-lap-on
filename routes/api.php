@@ -115,7 +115,3 @@ Route::get('notifications', [NotificationController::class, 'index']);
 Route::get('notifications/{id}', [NotificationController::class, 'show']);
 Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 Route::delete('notifications/{id}', [NotificationController::class, 'destroy']);
-
-
-
-Route::post('register-owner-marketplace', [RegisterOwnerMarketplaceController::class, 'register']);

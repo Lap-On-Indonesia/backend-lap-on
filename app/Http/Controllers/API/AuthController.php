@@ -118,7 +118,6 @@ class AuthController extends BaseController
         return ResponseFormatter::success($user, 'Profile updated successfully');
     }
 
-
     public function logout(Request $request)
     {
         $token = $request->user()->currentAccessToken()->delete();
