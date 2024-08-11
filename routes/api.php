@@ -23,22 +23,6 @@ use App\Http\Controllers\API\CategoryMarketplaceController;
 use App\Http\Controllers\API\TransactionMarketplaceController;
 use App\Http\Controllers\Auth\RegisterOwnerMarketplaceController;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -65,18 +49,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('history-transactions', [HistoryTransactionController::class, 'index']);
     Route::get('history-transactions/{id}', [HistoryTransactionController::class, 'show']);
-
-    Route::get('products', [ProductController::class, 'index']);
-    Route::get('products/{id}', [ProductController::class, 'show']);
-    Route::post('products', [ProductController::class, 'store']);
-    Route::put('products/{id}', [ProductController::class, 'update']);
-    Route::delete('products/{id}', [ProductController::class, 'destroy']);
-
-    Route::get('category-marketplaces', [CategoryMarketplaceController::class, 'index']);
-    Route::get('category-marketplaces/{id}', [CategoryMarketplaceController::class, 'show']);
-    Route::post('category-marketplaces', [CategoryMarketplaceController::class, 'store']);
-    Route::put('category-marketplaces/{id}', [CategoryMarketplaceController::class, 'update']);
-    Route::delete('category-marketplaces/{id}', [CategoryMarketplaceController::class, 'destroy']);
 
     Route::get('transaction-marketplaces', [TransactionMarketplaceController::class, 'index']);
     Route::get('transaction-marketplaces/{id}', [TransactionMarketplaceController::class, 'show']);
@@ -115,3 +87,15 @@ Route::get('notifications', [NotificationController::class, 'index']);
 Route::get('notifications/{id}', [NotificationController::class, 'show']);
 Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 Route::delete('notifications/{id}', [NotificationController::class, 'destroy']);
+
+Route::get('products', [ProductController::class, 'index']);
+Route::get('products/{id}', [ProductController::class, 'show']);
+Route::post('products', [ProductController::class, 'store']);
+Route::put('products/{id}', [ProductController::class, 'update']);
+Route::delete('products/{id}', [ProductController::class, 'destroy']);
+
+Route::get('category-marketplaces', [CategoryMarketplaceController::class, 'index']);
+Route::get('category-marketplaces/{id}', [CategoryMarketplaceController::class, 'show']);
+Route::post('category-marketplaces', [CategoryMarketplaceController::class, 'store']);
+Route::put('category-marketplaces/{id}', [CategoryMarketplaceController::class, 'update']);
+Route::delete('category-marketplaces/{id}', [CategoryMarketplaceController::class, 'destroy']);

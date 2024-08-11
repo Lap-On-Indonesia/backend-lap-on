@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\TransactionMarketplace;
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\TransactionMarketplace;
 
 class TransactionMarketplaceController extends Controller
 {
@@ -28,8 +29,9 @@ class TransactionMarketplaceController extends Controller
 
     public function store(Request $request)
     {
+        $userId = Auth::id();
+
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'venue_id' => 'required|exists:venues,id',
             'booking_id' => 'required|string|max:100',
             'total' => 'nullable|numeric',
