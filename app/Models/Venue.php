@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Venue extends Model
 {
@@ -17,7 +18,9 @@ class Venue extends Model
         'image',
         'address',
         'link_maps',
-        'price', // Tambahkan kolom price di sini
+        'day_of_week',
+        'start_time',
+        'end_time',
     ];
 
     public function category()

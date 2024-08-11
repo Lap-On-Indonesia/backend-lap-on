@@ -17,6 +17,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Forms\Components\TimePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -56,11 +57,30 @@ class VenueResource extends Resource
                 TextInput::make('link_maps')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('price') // Tambahkan input untuk price
+                Select::make('day_of_week')
+                    ->label('Day of Week')
+                    ->options([
+                        'monday'    => 'Monday',
+                        'tuesday'   => 'Tuesday',
+                        'wednesday' => 'Wednesday',
+                        'thursday'  => 'Thursday',
+                        'friday'    => 'Friday',
+                        'saturday'  => 'Saturday',
+                        'sunday'    => 'Sunday',
+                    ])
+                    ->required(),
+                TimePicker::make('start_time')
                     ->required()
-                    ->numeric()
-                    ->label('Price')
-                    ->placeholder('Enter price'),
+                    ->label('Start Time')
+                    ->hoursStep(1) // Mengatur interval pemilihan waktu menjadi setiap 1 jam
+                    ->withoutSeconds() // Menghilangkan detik dari tampilan
+                    ->reactive() // Memungkinkan perubahan end_time ketika start_time diubah
+                    ->afterStateUpdated(fn($state, callable $set) => $set('end_time', \Carbon\Carbon::parse($state)->addHour()->format('H:i'))), // Set end_time secara otomatis 1 jam setelah start_time
+                TimePicker::make('end_time')
+                    ->required()
+                    ->label('End Time')
+                    ->hoursStep(1) // Mengatur interval pemilihan waktu menjadi setiap 1 jam
+                    ->withoutSeconds(), // Menghilangkan detik dari tampilan
             ]);
     }
 
@@ -75,9 +95,9 @@ class VenueResource extends Resource
                 ImageColumn::make('image')->width(100)->height(100),
                 TextColumn::make('address')->searchable(),
                 TextColumn::make('link_maps'),
-                TextColumn::make('price') // Tambahkan kolom price di tabel
-                ->numeric()
-                ->formatStateUsing(fn ($state) => number_format($state, 2, '.', ','))
+                TextColumn::make('day_of_week')->label('Day of Week'),
+                TextColumn::make('start_time')->label('Start Time'),
+                TextColumn::make('end_time')->label('End Time'),
             ])
             ->filters([
                 //
