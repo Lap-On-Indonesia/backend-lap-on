@@ -1,27 +1,29 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\VenueController;
-use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\ArtikelController;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\BookingController;
-use App\Http\Controllers\API\InquiryController;
-use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\CategoryController;
-use App\Http\Controllers\API\PropertyController;
+use App\Http\Controllers\API\CategoryMarketplaceController;
 use App\Http\Controllers\API\CodeCheckController;
-use App\Http\Controllers\API\KprSimulateController;
-use App\Http\Controllers\API\TransactionController;
-use App\Http\Controllers\API\NotificationController;
-use App\Http\Controllers\API\ImagePropertyController;
-use App\Http\Controllers\API\ResetPasswordController;
 use App\Http\Controllers\API\ForgotPasswordController;
 use App\Http\Controllers\API\HistoryTransactionController;
-use App\Http\Controllers\API\CategoryMarketplaceController;
+use App\Http\Controllers\API\ImagePropertyController;
+use App\Http\Controllers\API\InquiryController;
+use App\Http\Controllers\API\KprSimulateController;
+use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\PropertyController;
+use App\Http\Controllers\API\ResetPasswordController;
+use App\Http\Controllers\API\ScheduleController;
+use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\TransactionMarketplaceController;
+use App\Http\Controllers\API\VenueController;
 use App\Http\Controllers\Auth\RegisterOwnerMarketplaceController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -99,3 +101,5 @@ Route::get('category-marketplaces/{id}', [CategoryMarketplaceController::class, 
 Route::post('category-marketplaces', [CategoryMarketplaceController::class, 'store']);
 Route::put('category-marketplaces/{id}', [CategoryMarketplaceController::class, 'update']);
 Route::delete('category-marketplaces/{id}', [CategoryMarketplaceController::class, 'destroy']);
+
+Route::get('/venues/{venue}/schedules', [ScheduleController::class, 'getAvailableSchedules']);
