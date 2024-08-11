@@ -3,9 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TransactionMarketplaceResource\Pages;
-use App\Filament\Resources\TransactionMarketplaceResource\RelationManagers;
 use App\Models\TransactionMarketplace;
 use App\Models\User;
+use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -14,8 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TransactionMarketplaceResource extends Resource
 {
@@ -31,14 +29,22 @@ class TransactionMarketplaceResource extends Resource
                     ->label('User')
                     ->options(User::all()->pluck('name', 'id'))
                     ->required(),
+                Select::make('product_id')
+                    ->label('Product')
+                    ->options(Product::all()->pluck('name_product', 'product_id'))
+                    ->required(),
                 TextInput::make('total')
                     ->label('Total')
                     ->numeric()
                     ->minValue(0)
                     ->step(0.01)
                     ->required(),
-                TextInput::make('status'),
-                TextInput::make('payment_url'),
+                TextInput::make('status')
+                    ->label('Status')
+                    ->required(),
+                TextInput::make('payment_url')
+                    ->label('Payment URL')
+                    ->required(),
             ]);
     }
 
@@ -50,11 +56,17 @@ class TransactionMarketplaceResource extends Resource
                     ->label('User')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('price')
-                    ->label('Harga')
+                TextColumn::make('product.name_product')
+                    ->label('Product')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('total')
+                    ->label('Total')
                     ->money('IDR', true),
-                TextColumn::make('status'),
+                TextColumn::make('status')
+                    ->label('Status'),
                 TextColumn::make('payment_url')
+                    ->label('Payment URL'),
             ])
             ->filters([
                 //
