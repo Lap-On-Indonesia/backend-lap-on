@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Schedule;
 use App\Models\Venue;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
@@ -13,12 +15,12 @@ class ScheduleController extends Controller
     public function getAvailableSchedules(Venue $venue, Request $request)
     {
         try {
-            // Dapatkan hari dalam seminggu dari tanggal yang dipilih
-            $dayOfWeek = strtolower($request->input('date')->format('l')); // Contoh output: 'monday', 'saturday'
+            // Konversi tanggal ke instance Carbon dan dapatkan hari dalam seminggu
+            $dayOfWeek = Carbon::parse($request->input('date'))->format('l'); // Contoh output: 'Monday'
 
             // Ambil semua jadwal yang tersedia pada hari tersebut untuk venue yang dipilih
             $schedules = Schedule::where('venue_id', $venue->id)
-                ->where('day_of_week', $dayOfWeek)
+                ->where('day_of_week', strtolower($dayOfWeek)) // Gunakan lowercase untuk keseragaman
                 ->where('is_available', true)
                 ->get();
 
@@ -38,13 +40,22 @@ class ScheduleController extends Controller
                 return $schedule;
             });
 
-            return response()->json($schedules);
+            // Menyertakan informasi venue bersama dengan jadwal yang tersedia
+            $response = [
+                'venue' => [
+                    'id' => $venue->id,
+                    'name' => $venue->name,
+                    'address' => $venue->address,
+                    'description' => $venue->description,
+                    'opening_time' => $venue->opening_time,
+                    'closing_time' => $venue->closing_time,
+                ],
+                'schedules' => $schedules,
+            ];
+
+            return ResponseFormatter::success($response, 'Schedules retrieved successfully');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve schedules',
-                'error' => $e->getMessage(),
-            ], 500);
+            return ResponseFormatter::error(null, 'Failed to retrieve schedules: ' . $e->getMessage(), 500);
         }
     }
 }
