@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Venue;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Helpers\ResponseFormatter;
 
 class VenueController extends Controller
 {
@@ -61,16 +62,33 @@ class VenueController extends Controller
 
     public function showbyCategoryId(Request $request)
     {
-        $categoryId = $request->input('category_id');
+        $categoryId = $request->category_id;
 
         if ($categoryId) {
+            // Cek apakah category_id ada di database
+            $categoryExists = Category::find($categoryId);
+
+            if (!$categoryExists) {
+                return ResponseFormatter::error(null, 'Category ID not found', 404);
+            }
+
             $venues = Venue::with('owner', 'category')
                 ->where('category_id', $categoryId)
                 ->get();
+
+            if ($venues->isEmpty()) {
+                return ResponseFormatter::error(null, 'No venues found for the given category', 404);
+            }
+
+            return ResponseFormatter::success($venues, 'Venues retrieved successfully for the given category');
         } else {
             $venues = Venue::with('owner', 'category')->get();
-        }
 
-        return ResponseFormatter::success($venues, 'Venues retrieved successfully');
+            if ($venues->isEmpty()) {
+                return ResponseFormatter::error(null, 'No venues available', 404);
+            }
+
+            return ResponseFormatter::success($venues, 'All venues retrieved successfully');
+        }
     }
 }
