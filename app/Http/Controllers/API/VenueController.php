@@ -12,7 +12,7 @@ class VenueController extends Controller
 {
     public function index()
     {
-        $venues = Venue::with('owner', 'category')->get();
+        $venues = Venue::with('owner', 'category', 'schedule')->get();
         return ResponseFormatter::success($venues, 'Venues retrieved successfully');
     }
 
@@ -34,7 +34,7 @@ class VenueController extends Controller
 
     public function show($id)
     {
-        $venue = Venue::with('owner', 'category')->findOrFail($id);
+        $venue = Venue::with('owner', 'category', 'schedule')->findOrFail($id);
         return ResponseFormatter::success($venue, 'Venue retrieved successfully');
     }
 
@@ -75,7 +75,7 @@ class VenueController extends Controller
                 return ResponseFormatter::error(null, 'Category ID not found', 404);
             }
 
-            $venues = Venue::with('owner', 'category')
+            $venues = Venue::with('owner', 'category', 'schedule')
                 ->where('category_id', $categoryId)
                 ->get();
 
@@ -85,7 +85,7 @@ class VenueController extends Controller
 
             return ResponseFormatter::success($venues, 'Venues retrieved successfully for the given category');
         } else {
-            $venues = Venue::with('owner', 'category')->get();
+            $venues = Venue::with('owner', 'category', 'schedule')->get();
 
             if ($venues->isEmpty()) {
                 return ResponseFormatter::error(null, 'No venues available', 404);
