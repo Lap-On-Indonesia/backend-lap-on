@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Helpers\ResponseFormatter;
+use App\Models\CategoryMarketplace;
 
 class ProductController extends Controller
 {
@@ -65,5 +66,37 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         return ResponseFormatter::success($product, 'Product retrieved successfully');
+    }
+
+    public function showbyCategoryId(Request $request)
+    {
+        $categoryId = $request->category_id;
+
+        if ($categoryId) {
+            // Cek apakah category_id ada di database
+            $categoryExists = CategoryMarketplace::find($categoryId);
+
+            if (!$categoryExists) {
+                return ResponseFormatter::error(null, 'Category ID not found', 404);
+            }
+
+            $products = Product::with('category_marketplace')
+                ->where('category_id', $categoryId)
+                ->get();
+
+            if ($products->isEmpty()) {
+                return ResponseFormatter::error(null, 'No product found for the given category', 404);
+            }
+
+            return ResponseFormatter::success($products, 'product retrieved successfully for the given category');
+        } else {
+            $products = Product::with('category_marketplace')->get();
+
+            if ($products->isEmpty()) {
+                return ResponseFormatter::error(null, 'No venues available', 404);
+            }
+
+            return ResponseFormatter::success($products, 'All venues retrieved successfully');
+        }
     }
 }
