@@ -26,7 +26,7 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $userId = Auth::id();
-        dd($userId);
+
         $validator = Validator::make($request->all(), [
             'venue_id' => 'required|exists:venues,id',
             'booking_id' => 'required|string|max:100|unique:transactions,booking_id',
