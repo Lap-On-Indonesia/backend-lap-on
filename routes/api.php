@@ -53,7 +53,7 @@ use App\Http\Controllers\Auth\RegisterOwnerMarketplaceController;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-Route::middleware(['auth:sanctum', 'response.formatter'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user', [AuthController::class, 'fetch']);
     Route::post('user', [AuthController::class, 'updateProfile']);
     Route::post('user/photo', [AuthController::class, 'updatePhoto']);
@@ -83,6 +83,12 @@ Route::middleware(['auth:sanctum', 'response.formatter'])->group(function () {
     Route::post('transaction-marketplaces', [TransactionMarketplaceController::class, 'store']);
     Route::put('transaction-marketplaces/{id}', [TransactionMarketplaceController::class, 'update']);
     Route::delete('transaction-marketplaces/{id}', [TransactionMarketplaceController::class, 'destroy']);
+
+    Route::post('bookings', [BookingController::class, 'store']);
+    Route::get('bookings', [BookingController::class, 'index']);
+    Route::get('bookings/{id}', [BookingController::class, 'show']);
+    Route::put('bookings/{id}', [BookingController::class, 'update']);
+    Route::delete('bookings/{id}', [BookingController::class, 'destroy']);
 });
 
 Route::get('venues', [VenueController::class, 'index']);
@@ -110,10 +116,6 @@ Route::get('notifications/{id}', [NotificationController::class, 'show']);
 Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 Route::delete('notifications/{id}', [NotificationController::class, 'destroy']);
 
-Route::post('bookings', [BookingController::class, 'store']);
-Route::get('bookings', [BookingController::class, 'index']);
-Route::get('bookings/{id}', [BookingController::class, 'show']);
-Route::put('bookings/{id}', [BookingController::class, 'update']);
-Route::delete('bookings/{id}', [BookingController::class, 'destroy']);
+
 
 Route::post('register-owner-marketplace', [RegisterOwnerMarketplaceController::class, 'register']);
