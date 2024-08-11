@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Helpers\ResponseFormatter;
 
 class BannerController extends Controller
 {
@@ -24,19 +25,19 @@ class BannerController extends Controller
             'link_url' => $request->link_url,
         ]);
 
-        return response()->json($banner);
+        return ResponseFormatter::success($banner, 'Banner created successfully');
     }
 
     public function index()
     {
         $banners = Banner::all();
-        return response()->json($banners);
+        return ResponseFormatter::success($banners, 'Banners retrieved successfully');
     }
 
     public function show($id)
     {
         $banner = Banner::findOrFail($id);
-        return response()->json($banner);
+        return ResponseFormatter::success($banner, 'Banner retrieved successfully');
     }
 
     public function update(Request $request, $id)
@@ -59,7 +60,7 @@ class BannerController extends Controller
             'link_url' => $request->link_url,
         ]);
 
-        return response()->json($banner);
+        return ResponseFormatter::success($banner, 'Banner updated successfully');
     }
 
     public function destroy($id)
@@ -67,6 +68,6 @@ class BannerController extends Controller
         $banner = Banner::findOrFail($id);
         $banner->delete();
 
-        return response()->json(null);
+        return ResponseFormatter::success(null, 'Banner deleted successfully');
     }
 }
