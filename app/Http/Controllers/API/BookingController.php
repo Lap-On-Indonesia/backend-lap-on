@@ -5,13 +5,14 @@ namespace App\Http\Controllers\API;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Helpers\ResponseFormatter;
 
 class BookingController extends Controller
 {
     public function index()
     {
         $bookings = Booking::all();
-        return response()->json($bookings);
+        return ResponseFormatter::success($bookings, 'Bookings retrieved successfully');
     }
 
     public function store(Request $request)
@@ -29,7 +30,7 @@ class BookingController extends Controller
 
         $booking = Booking::create($request->all());
 
-        return response()->json(['message' => 'Booking created successfully', 'booking' => $booking], 201);
+        return ResponseFormatter::success($booking, 'Booking created successfully', 201);
     }
 
     public function show($id)
@@ -37,10 +38,10 @@ class BookingController extends Controller
         $booking = Booking::find($id);
 
         if (!$booking) {
-            return response()->json(['message' => 'Booking not found'], 404);
+            return ResponseFormatter::error('Booking not found', null, 404);
         }
 
-        return response()->json($booking);
+        return ResponseFormatter::success($booking, 'Booking retrieved successfully');
     }
 
     public function update(Request $request, $id)
@@ -48,7 +49,7 @@ class BookingController extends Controller
         $booking = Booking::find($id);
 
         if (!$booking) {
-            return response()->json(['message' => 'Booking not found'], 404);
+            return ResponseFormatter::error('Booking not found', null, 404);
         }
 
         $request->validate([
@@ -64,7 +65,7 @@ class BookingController extends Controller
 
         $booking->update($request->all());
 
-        return response()->json(['message' => 'Booking updated successfully', 'booking' => $booking]);
+        return ResponseFormatter::success($booking, 'Booking updated successfully');
     }
 
     public function destroy($id)
@@ -72,11 +73,11 @@ class BookingController extends Controller
         $booking = Booking::find($id);
 
         if (!$booking) {
-            return response()->json(['message' => 'Booking not found'], 404);
+            return ResponseFormatter::error('Booking not found', null, 404);
         }
 
         $booking->delete();
 
-        return response()->json(['message' => 'Booking deleted successfully']);
+        return ResponseFormatter::success(null, 'Booking deleted successfully');
     }
 }

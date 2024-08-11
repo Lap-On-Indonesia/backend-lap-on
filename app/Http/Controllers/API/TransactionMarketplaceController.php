@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Models\TransactionMarketplace;
+use App\Helpers\ResponseFormatter;
 
 class TransactionMarketplaceController extends Controller
 {
     public function index()
     {
-        return response()->json(TransactionMarketplace::all(), Response::HTTP_OK);
+        $transactions = TransactionMarketplace::all();
+        return ResponseFormatter::success($transactions, 'Transactions retrieved successfully');
     }
 
     public function show($id)
@@ -19,10 +20,10 @@ class TransactionMarketplaceController extends Controller
         $transaction = TransactionMarketplace::find($id);
 
         if (!$transaction) {
-            return response()->json(['message' => 'Transaction not found'], Response::HTTP_NOT_FOUND);
+            return ResponseFormatter::error(['message' => 'Transaction not found'], 'Transaction not found', 404);
         }
 
-        return response()->json($transaction, Response::HTTP_OK);
+        return ResponseFormatter::success($transaction, 'Transaction retrieved successfully');
     }
 
     public function store(Request $request)
@@ -38,7 +39,7 @@ class TransactionMarketplaceController extends Controller
 
         $transaction = TransactionMarketplace::create($request->all());
 
-        return response()->json($transaction, Response::HTTP_CREATED);
+        return ResponseFormatter::success($transaction, 'Transaction created successfully', 201);
     }
 
     public function update(Request $request, $id)
@@ -46,7 +47,7 @@ class TransactionMarketplaceController extends Controller
         $transaction = TransactionMarketplace::find($id);
 
         if (!$transaction) {
-            return response()->json(['message' => 'Transaction not found'], Response::HTTP_NOT_FOUND);
+            return ResponseFormatter::error(['message' => 'Transaction not found'], 'Transaction not found', 404);
         }
 
         $request->validate([
@@ -60,7 +61,7 @@ class TransactionMarketplaceController extends Controller
 
         $transaction->update($request->all());
 
-        return response()->json($transaction, Response::HTTP_OK);
+        return ResponseFormatter::success($transaction, 'Transaction updated successfully');
     }
 
     public function destroy($id)
@@ -68,11 +69,11 @@ class TransactionMarketplaceController extends Controller
         $transaction = TransactionMarketplace::find($id);
 
         if (!$transaction) {
-            return response()->json(['message' => 'Transaction not found'], Response::HTTP_NOT_FOUND);
+            return ResponseFormatter::error(['message' => 'Transaction not found'], 'Transaction not found', 404);
         }
 
         $transaction->delete();
 
-        return response()->json(['message' => 'Transaction deleted'], Response::HTTP_NO_CONTENT);
+        return ResponseFormatter::success(null, 'Transaction deleted successfully', 204);
     }
 }

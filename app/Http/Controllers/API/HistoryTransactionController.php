@@ -6,35 +6,27 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\ResponseFormatter;
 
 class HistoryTransactionController extends Controller
 {
     public function index()
     {
-        // Get all transactions for the authenticated user
+        // Mengambil semua transaksi untuk user yang sedang terautentikasi
         $transactions = Transaction::where('user_id', Auth::id())->get();
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $transactions
-        ], 200);
+        return ResponseFormatter::success($transactions, 'Transactions retrieved successfully');
     }
 
     public function show($id)
     {
-        // Get a single transaction by ID for the authenticated user
+        // Mengambil satu transaksi berdasarkan ID untuk user yang sedang terautentikasi
         $transaction = Transaction::where('user_id', Auth::id())->where('id', $id)->first();
 
         if (!$transaction) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Transaction not found'
-            ], 404);
+            return ResponseFormatter::error(null, 'Transaction not found', 404);
         }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $transaction
-        ], 200);
+        return ResponseFormatter::success($transaction, 'Transaction retrieved successfully');
     }
 }

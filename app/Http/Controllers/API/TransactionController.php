@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-
+use App\Helpers\ResponseFormatter;
 
 class TransactionController extends Controller
 {
@@ -24,9 +24,7 @@ class TransactionController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'error' => $validator->errors()
-            ], 422);
+            return ResponseFormatter::error($validator->errors(), 'Validation Error', 422);
         }
 
         $transaction = Transaction::create([
@@ -38,7 +36,6 @@ class TransactionController extends Controller
             'payment_url' => $request->payment_url,
         ]);
 
-        return response()->json($transaction, 201);
+        return ResponseFormatter::success($transaction, 'Transaction created successfully', 201);
     }
 }
-

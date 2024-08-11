@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Helpers\ResponseFormatter;
 
 class NotificationController extends Controller
 {
@@ -22,19 +23,19 @@ class NotificationController extends Controller
             'message' => $request->message,
         ]);
 
-        return response()->json($notification);
+        return ResponseFormatter::success($notification, 'Notification created successfully');
     }
 
     public function index()
     {
         $notifications = Notification::all();
-        return response()->json($notifications);
+        return ResponseFormatter::success($notifications, 'Notifications retrieved successfully');
     }
 
     public function show($id)
     {
         $notification = Notification::findOrFail($id);
-        return response()->json($notification);
+        return ResponseFormatter::success($notification, 'Notification retrieved successfully');
     }
 
     public function markAsRead($id)
@@ -42,7 +43,7 @@ class NotificationController extends Controller
         $notification = Notification::findOrFail($id);
         $notification->update(['is_read' => true]);
 
-        return response()->json($notification);
+        return ResponseFormatter::success($notification, 'Notification marked as read');
     }
 
     public function destroy($id)
@@ -50,6 +51,6 @@ class NotificationController extends Controller
         $notification = Notification::findOrFail($id);
         $notification->delete();
 
-        return response()->json(null);
+        return ResponseFormatter::success(null, 'Notification deleted successfully');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Helpers\ResponseFormatter;
 
 class ProductController extends Controller
 {
@@ -22,10 +23,7 @@ class ProductController extends Controller
 
         $product = Product::create($request->all());
 
-        return response()->json([
-            'message' => 'Product created successfully',
-            'product' => $product
-        ], 201);
+        return ResponseFormatter::success($product, 'Product created successfully', 201);
     }
 
     // Memperbarui produk
@@ -43,10 +41,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->update($request->all());
 
-        return response()->json([
-            'message' => 'Product updated successfully',
-            'product' => $product
-        ]);
+        return ResponseFormatter::success($product, 'Product updated successfully');
     }
 
     // Menghapus produk
@@ -55,22 +50,20 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
 
-        return response()->json([
-            'message' => 'Product deleted successfully'
-        ]);
+        return ResponseFormatter::success(null, 'Product deleted successfully');
     }
 
     // Mendapatkan daftar produk
     public function index()
     {
         $products = Product::all();
-        return response()->json($products);
+        return ResponseFormatter::success($products, 'Products retrieved successfully');
     }
 
     // Mendapatkan produk berdasarkan ID
     public function show($id)
     {
         $product = Product::findOrFail($id);
-        return response()->json($product);
+        return ResponseFormatter::success($product, 'Product retrieved successfully');
     }
 }

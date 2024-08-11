@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -60,7 +61,8 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name_product'),
+                TextColumn::make('name_product')
+                    ->label('Nama Produk'),
                 TextColumn::make('category_marketplace.name')
                     ->label('Category Marketplace')
                     ->searchable()
@@ -69,10 +71,9 @@ class ProductResource extends Resource
                     ->label('Harga')
                     ->money('IDR', true),
                 TextColumn::make('description'),
-                Tables\Columns\ImageColumn::make('image') // Menambahkan kolom gambar di tabel
+                ImageColumn::make('image') // Menggunakan kolom gambar yang benar
                     ->label('Image')
                     ->disk('public') // Gunakan disk yang sesuai dengan konfigurasi Anda
-                    ->directory('images/products') // Direktori tempat gambar disimpan
                     ->width(100) // Lebar gambar, sesuaikan dengan kebutuhan
                     ->height(100), // Tinggi gambar, sesuaikan dengan kebutuhan
             ])

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Helpers\ResponseFormatter;
 
 class CategoryController extends Controller
 {
@@ -18,19 +19,19 @@ class CategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        return response()->json($category);
+        return ResponseFormatter::success($category, 'Category created successfully', 201);
     }
 
     public function index()
     {
         $categories = Category::all();
-        return response()->json($categories);
+        return ResponseFormatter::success($categories, 'Categories retrieved successfully');
     }
 
     public function show($id)
     {
         $category = Category::findOrFail($id);
-        return response()->json($category);
+        return ResponseFormatter::success($category, 'Category retrieved successfully');
     }
 
     public function update(Request $request, $id)
@@ -44,7 +45,7 @@ class CategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        return response()->json($category);
+        return ResponseFormatter::success($category, 'Category updated successfully');
     }
 
     public function destroy($id)
@@ -52,6 +53,6 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->delete();
 
-        return response()->json(null);
+        return ResponseFormatter::success(null, 'Category deleted successfully');
     }
 }
