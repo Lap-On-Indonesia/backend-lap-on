@@ -47,6 +47,8 @@ class ScheduleController extends Controller
                     'name' => $venue->name,
                     'address' => $venue->address,
                     'description' => $venue->description,
+                    'price' => $venue->price,
+                    'category_id' => $venue->category_id,
                     'opening_time' => $venue->opening_time,
                     'closing_time' => $venue->closing_time,
                 ],
