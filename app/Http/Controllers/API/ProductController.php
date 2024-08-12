@@ -68,10 +68,12 @@ class ProductController extends Controller
         return ResponseFormatter::success($product, 'Product retrieved successfully');
     }
 
-    public function showbyCategoryId(Request $request)
+    public function showByCategoryId(Request $request)
     {
-        $categoryId = $request->category_id;
+        // Mengambil category_id dari request
+        $categoryId = $request->category_marketplace_id;
 
+        // Jika category_id diberikan
         if ($categoryId) {
             // Cek apakah category_id ada di database
             $categoryExists = CategoryMarketplace::find($categoryId);
@@ -80,23 +82,25 @@ class ProductController extends Controller
                 return ResponseFormatter::error(null, 'Category ID not found', 404);
             }
 
-            $products = Product::with('category_marketplace')
-                ->where('category_id', $categoryId)
+            // Mengambil produk berdasarkan category_id
+            $products = Product::with('categoryMarketplace')
+                ->where('category_marketplace_id', $categoryId)
                 ->get();
 
             if ($products->isEmpty()) {
                 return ResponseFormatter::error(null, 'No product found for the given category', 404);
             }
 
-            return ResponseFormatter::success($products, 'product retrieved successfully for the given category');
+            return ResponseFormatter::success($products, 'Products retrieved successfully for the given category');
         } else {
-            $products = Product::with('category_marketplace')->get();
+            // Jika category_id tidak diberikan, mengambil semua produk
+            $products = Product::with('categoryMarketplace')->get();
 
             if ($products->isEmpty()) {
-                return ResponseFormatter::error(null, 'No venues available', 404);
+                return ResponseFormatter::error(null, 'No products available', 404);
             }
 
-            return ResponseFormatter::success($products, 'All venues retrieved successfully');
+            return ResponseFormatter::success($products, 'All products retrieved successfully');
         }
     }
 }

@@ -95,7 +95,7 @@ Route::get('products/{id}', [ProductController::class, 'show']);
 Route::post('products', [ProductController::class, 'store']);
 Route::put('products/{id}', [ProductController::class, 'update']);
 Route::delete('products/{id}', [ProductController::class, 'destroy']);
-Route::get('product/category/{category_id}', [ProductController::class, 'showbyCategoryId']);
+Route::get('product/category/{category_marketplace_id}', [ProductController::class, 'showbyCategoryId']);
 
 
 Route::get('category-marketplaces', [CategoryMarketplaceController::class, 'index']);
