@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KprController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\PageController;
-use App\Http\Controllers\KprController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\PaymentController;
 
 
 /*
@@ -32,9 +33,13 @@ Route::get('/', function () {
     return redirect('/admin');
 });
 
+Route::get('/pembayaran/sukses', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+
+// Route::post('/payment/success', [PaymentController::class, 'paymentSuccess']);
+
 // routes/web.php
-Route::post('/kpr/simulation', [KprController::class, 'simulate'])->name('kpr.simulation');
-Route::get('/kpr/form', function () {
-    return view('kpr.form');
-})->name('kpr.form');
+// Route::post('/kpr/simulation', [KprController::class, 'simulate'])->name('kpr.simulation');
+// Route::get('/kpr/form', function () {
+//     return view('kpr.form');
+// })->name('kpr.form');
 
