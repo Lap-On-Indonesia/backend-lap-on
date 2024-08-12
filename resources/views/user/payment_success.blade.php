@@ -57,7 +57,7 @@
         <div class="details">
             Terima kasih telah melakukan pembayaran. Pesanan Anda akan segera diproses.
         </div>
-        <a href="" class="btn btn-primary">Kembali ke Beranda</a>
+        {{-- <a href="" class="btn btn-primary">Kembali ke Beranda</a> --}}
     </div>
 </body>
 
