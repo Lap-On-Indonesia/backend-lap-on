@@ -48,7 +48,7 @@ class MarketplaceCheckoutController extends Controller
             $transaction = TransactionMarketplace::create([
                 'transaction_id' => $transactionId,
                 'user_id'        => Auth::id(),
-                'product_id'     => $product->id,
+                'product_id'     => $productId,
                 'total'          => $grossAmount,
                 'status'         => 'pending',
             ]);
@@ -56,8 +56,8 @@ class MarketplaceCheckoutController extends Controller
             // Prepare payload for Midtrans
             $payload = [
                 'transaction_details' => [
-                    'order_id'      => $transaction->transaction_id,
-                    'gross_amount'  => $grossAmount,
+                    'order_id'      => $transactionId,
+                    'gross_amount'  => $transaction->total,
                 ],
                 'customer_details' => [
                     'first_name'       => Auth::user()->name,
@@ -66,10 +66,10 @@ class MarketplaceCheckoutController extends Controller
                 ],
                 'item_details' => [
                     [
-                        'id'       => $product->id,
+                        'id'       => $productId,
                         'price'    => $product->price,
                         'quantity' => 1,
-                        'name'     => $product->name,
+                        'name'     => $product->name_product,
                     ]
                 ]
             ];
