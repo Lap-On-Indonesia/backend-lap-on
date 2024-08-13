@@ -12,15 +12,15 @@ use App\Helpers\ResponseFormatter;
 class TransactionController extends Controller
 {
     public function index()
-{
-    $transactions = Transaction::with(['user', 'venue', 'booking'])->get();
+    {
+        $transactions = Transaction::with(['user', 'venue', 'booking'])->get();
 
-    if ($transactions->isEmpty()) {
-        return ResponseFormatter::error(null, 'No transactions found', 404);
+        if ($transactions->isEmpty()) {
+            return ResponseFormatter::error(null, 'No transactions found', 404);
+        }
+
+        return ResponseFormatter::success($transactions, 'Transactions retrieved successfully');
     }
-
-    return ResponseFormatter::success($transactions, 'Transactions retrieved successfully');
-}
 
 
     public function store(Request $request)

@@ -13,6 +13,7 @@ use App\Http\Controllers\API\HistoryTransactionController;
 use App\Http\Controllers\API\ImagePropertyController;
 use App\Http\Controllers\API\InquiryController;
 use App\Http\Controllers\API\KprSimulateController;
+use App\Http\Controllers\API\MarketplaceCheckoutController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\PropertyController;
@@ -67,6 +68,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('bookings/{id}', [BookingController::class, 'destroy']);
 
     Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('checkout-marketplace', [MarketplaceCheckoutController::class, 'store'])->name('checkout.store');
 });
 
 Route::get('venues', [VenueController::class, 'index']);

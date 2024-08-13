@@ -125,7 +125,7 @@ class BookingController extends Controller
             $data['user_id'] = $userId;
 
             // Membuat booking
-            $booking = Booking::create($data)->with('venue');
+            $booking = Booking::create($data);
 
             return response()->json([
                 'code' => 201,
