@@ -30,12 +30,15 @@ class BannerResource extends Resource
                 TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                FileUpload::make('image_url')
-                    ->label('Image Upload')
-                    ->disk('public')
-                    ->directory('banner')
-                    ->image()
-                    ->required(),
+                // FileUpload::make('image_url')
+                //     ->label('Image Upload')
+                //     ->disk('public')
+                //     ->directory('banner')
+                //     ->image()
+                //     ->required(),
+                TextInput::make('image_url')
+                    ->required()
+                    ->maxLength(255),
                 TextInput::make('link_url')
                     ->required()
                     ->maxLength(255),
@@ -49,10 +52,12 @@ class BannerResource extends Resource
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                ImageColumn::make('image_url')
-                    ->label('Image')
-                    ->width(100)
-                    ->height(100),
+                // ImageColumn::make('image_url')
+                //     ->label('Image')
+                //     ->width(100)
+                //     ->height(100),
+                TextColumn::make('image_url')
+                    ->label('Image Url'),
                 TextColumn::make('link_url')
                     ->label('Link'),
             ])
