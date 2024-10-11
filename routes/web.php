@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KprController;
+use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\API\PaymentController;
@@ -30,8 +31,11 @@ use App\Http\Controllers\API\PaymentController;
 //     }
 // );
 Route::get('/', function () {
-    return redirect('/admin');
+    // return redirect('/admin');
+    return view('landingpage');
 });
+
+Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.store');
 
 Route::get('/pembayaran/sukses', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 
@@ -42,4 +46,3 @@ Route::get('/pembayaran/sukses', [PaymentController::class, 'paymentSuccess'])->
 // Route::get('/kpr/form', function () {
 //     return view('kpr.form');
 // })->name('kpr.form');
-

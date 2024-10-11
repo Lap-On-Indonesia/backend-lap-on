@@ -21,12 +21,15 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        DB::table('admins')->insert([
-            [
-                'name' => 'Admin',
-                'email' => 'admin@gmail.com',
-                'password' => Hash::make('password'),
-            ]
-        ]);
+        // DB::table('admins')->insert([
+        //     [
+        //         'name' => 'Admin',
+        //         'email' => 'admin@gmail.com',
+        //         'password' => Hash::make('password'),
+        //     ]
+        // ]);
+
+        $this->call(CategoriesTableSeeder::class);
+        $this->call(BannersTableSeeder::class);
     }
 }
