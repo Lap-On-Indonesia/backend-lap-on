@@ -39,6 +39,11 @@ Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.stor
 
 Route::get('/pembayaran/sukses', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 
+Route::get('/register', function () {
+    return view('register');
+})->name('register');
+
+
 // Route::post('/payment/success', [PaymentController::class, 'paymentSuccess']);
 
 // routes/web.php
