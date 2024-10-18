@@ -29,7 +29,8 @@ class InquiryController extends Controller
         ]);
 
         // Kirim notifikasi email ke admin
-        Mail::to(['reonaldi152@gmail.com', 'vindoraidan@gmail.com', 'khanzawatson@gmail.com', 'nandaputrirama29@gmail.com'])->send(new InquiryNotification($inquiry));
+        // Mail::to(['reonaldi152@gmail.com', 'vindoraidan@gmail.com', 'khanzawatson@gmail.com', 'nandaputrirama29@gmail.com'])->send(new InquiryNotification($inquiry));
+        Mail::to(['reonaldi152@gmail.com', 'vindoraidan@gmail.com', 'khanzawatson@gmail.com'])->send(new InquiryNotification($inquiry));
         // Mail::to(['reonaldi152@gmail.com'])->send(new InquiryNotification($inquiry));
 
         // Redirect atau tampilkan pesan sukses
