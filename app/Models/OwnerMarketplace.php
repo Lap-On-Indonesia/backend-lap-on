@@ -15,11 +15,20 @@ class OwnerMarketplace extends Model
         'phone',
         'photo_profile',
         'photo_ktp',
-        'password',
+        'no_rekening',
+        'store_name',
+        'store_address',
+        'photo_store',
+        'link_maps',
     ];
 
     public function product()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function user()
+    {
+        return $this->hasMany(User::class);
     }
 }

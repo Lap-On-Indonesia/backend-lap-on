@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KprController;
+use App\Models\RegisterOwnerMarketplace;
 use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\API\PaymentController;
-
+use App\Http\Controllers\RegisterOwnerController;
+use App\Http\Controllers\RegisterOwnerMarketplaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,9 +41,11 @@ Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.stor
 
 Route::get('/pembayaran/sukses', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 
-Route::get('/register', function () {
-    return view('register');
-})->name('register');
+Route::get('/register-owner', [RegisterOwnerController::class, 'showRegistrationForm'])->name('register-owner');
+Route::post('/register-owner', [RegisterOwnerController::class, 'register'])->name('register-owner.post');
+
+Route::get('/register-owner-marketplace', [RegisterOwnerMarketplaceController::class, 'showRegistrationForm'])->name('register-owner-marketplace');
+Route::post('/register-owner-marketplace', [RegisterOwnerMarketplaceController::class, 'register'])->name('register-owner-marketplace.post');
 
 
 // Route::post('/payment/success', [PaymentController::class, 'paymentSuccess']);

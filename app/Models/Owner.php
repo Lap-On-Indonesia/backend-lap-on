@@ -15,11 +15,15 @@ class Owner extends Model
         'phone',
         'photo_profile',
         'photo_ktp',
-        'password',
+        'no_rekening',
+        'store_name',
+        'store_address',
+        'photo_store',
+        'link_maps',
     ];
 
-    public function venue()
+    public function user()
     {
-        return $this->hasMany(Venue::class);
+        return $this->hasMany(User::class);
     }
 }

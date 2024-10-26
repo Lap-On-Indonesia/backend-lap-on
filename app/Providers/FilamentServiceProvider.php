@@ -12,8 +12,6 @@ class FilamentServiceProvider extends BaseFilamentServiceProvider
         parent::boot();
 
         // Register middleware
-        $this->app['router']->middlewareGroup('web', [
-            \App\Http\Middleware\CheckOwnerMarketplace::class,
-        ]);
+        $this->app['router']->middlewareGroup('web', []);
     }
 }

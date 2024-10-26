@@ -2,18 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\User;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\UserResource\RelationManagers;
 
 class UserResource extends Resource
 {
@@ -34,6 +35,7 @@ class UserResource extends Resource
                     ->email()
                     ->unique(ignorable: fn($record) => $record)
                     ->visibleOn('create'),
+                Select::make('roles')->multiple()->relationship('roles', 'name'),
                 TextInput::make('phone')
                     ->label('No.Telp')
                     ->required(),
@@ -53,6 +55,8 @@ class UserResource extends Resource
                     ->label('Nama'),
                 TextColumn::make('email')
                     ->label('Email'),
+                TextColumn::make('roles.name')
+                    ->formatStateUsing(fn($state): string => str()->headline($state)),
                 TextColumn::make('phone')
                     ->label('No.Telp'),
             ])
