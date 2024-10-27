@@ -701,7 +701,7 @@
     <!-- ====== Team End ====== -->
 
     <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
+    {{-- <section id="contact" class="contact">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
                 <h2>Contact</h2>
@@ -765,7 +765,7 @@
 
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- End Contact Section -->
 
     <!-- ====== Footer Start ====== -->

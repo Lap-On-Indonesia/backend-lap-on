@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('store_name');
             $table->string('store_address');
             $table->string('photo_store')->nullable();
+            $table->enum('status', ['pending', 'accept', 'reject'])->default('pending');
             $table->string('link_maps');
             $table->timestamps();
         });

@@ -20,6 +20,7 @@ class Owner extends Model
         'store_address',
         'photo_store',
         'link_maps',
+        'status'
     ];
 
     public function user()
