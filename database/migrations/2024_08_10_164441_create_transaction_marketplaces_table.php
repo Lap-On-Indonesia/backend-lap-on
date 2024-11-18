@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('status', 10);
             $table->string('payment_url', 255);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

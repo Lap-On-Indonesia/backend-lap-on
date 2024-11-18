@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'accept', 'reject'])->default('pending');
             $table->string('link_maps');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('transaction')->nullable();
             $table->decimal('total', 15, 2)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string("twitter")->nullable();
             $table->string("behance")->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
