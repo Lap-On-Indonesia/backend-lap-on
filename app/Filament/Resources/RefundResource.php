@@ -21,6 +21,11 @@ class RefundResource extends Resource
     protected static ?string $model = Refund::class;
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

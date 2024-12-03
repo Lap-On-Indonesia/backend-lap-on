@@ -27,6 +27,11 @@ class VenueResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

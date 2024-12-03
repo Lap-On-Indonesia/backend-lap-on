@@ -26,6 +26,11 @@ class OwnerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

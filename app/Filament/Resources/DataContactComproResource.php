@@ -19,6 +19,11 @@ class DataContactComproResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Company Profile';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

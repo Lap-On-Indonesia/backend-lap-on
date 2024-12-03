@@ -23,6 +23,11 @@ class BannerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-signal';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

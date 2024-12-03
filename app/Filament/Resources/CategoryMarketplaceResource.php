@@ -21,6 +21,11 @@ class CategoryMarketplaceResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

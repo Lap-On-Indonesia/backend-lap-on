@@ -29,6 +29,11 @@ class OwnerMarketplaceResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
+
     protected function afterSave($record): void
     {
         // Mengecek apakah status berubah

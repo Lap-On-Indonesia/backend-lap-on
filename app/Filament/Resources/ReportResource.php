@@ -28,6 +28,11 @@ class ReportResource extends Resource
         return $form->schema([]);
     }
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
+
     public static function table(Table $table): Table
     {
         return $table

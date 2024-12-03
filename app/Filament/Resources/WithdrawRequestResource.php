@@ -23,6 +23,11 @@ class WithdrawRequestResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
