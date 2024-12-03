@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('total_payment', 15, 2); // Total payment dalam bentuk decimal
             $table->string('validation_image')->nullable(); // Kolom untuk menyimpan path gambar bukti pembayaran
             $table->timestamps(); // created_at dan updated_at
+            $table->softDeletes();
         });
     }
 

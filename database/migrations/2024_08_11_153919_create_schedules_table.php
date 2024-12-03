@@ -19,6 +19,7 @@ return new class extends Migration
             $table->time('end_time');      // Waktu akhir slot
             $table->boolean('is_available')->default(true); // Menunjukkan apakah slot ini tersedia
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

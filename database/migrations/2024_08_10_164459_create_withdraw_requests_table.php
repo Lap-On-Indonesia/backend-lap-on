@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamp('requested_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('transaction_marketplace_id')->references('id')->on('transaction_marketplaces')->onDelete('cascade');
         });

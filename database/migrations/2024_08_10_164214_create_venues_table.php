@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('link_maps');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('owner_id')->references('id')->on('owners');
             $table->foreign('category_id')->references('id')->on('categories');

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("title")->nullable();
             $table->string("subtitle")->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

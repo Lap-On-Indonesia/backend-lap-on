@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('tax_percentage', 50);
             $table->decimal('total_payment', 50);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
