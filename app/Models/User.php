@@ -60,4 +60,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class);
+    }
+
+    public function ownerMarketplace()
+    {
+        return $this->belongsTo(OwnerMarketplace::class);
+    }
 }

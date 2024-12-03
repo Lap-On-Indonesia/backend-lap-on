@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
+
+            $table->foreignId('owner_id')->nullable()->constrained('owners')->onDelete('cascade');
+            $table->foreignId('owner_marketplace_id')->nullable()->constrained('owner_marketplace')->onDelete('cascade');
             $table->string('profile_photo_path', 5048)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             // $table->string('roles')->default('user');

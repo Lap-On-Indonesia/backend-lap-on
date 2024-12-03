@@ -30,6 +30,6 @@ class OwnerMarketplace extends Model
 
     public function user()
     {
-        return $this->hasMany(User::class);
+        return $this->hasOne(User::class);
     }
 }
