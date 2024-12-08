@@ -4,33 +4,54 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReportResource\Pages;
 use App\Models\Report;
+use App\Models\Booking;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ReportsExport;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportResource extends Resource
 {
-    // Ubah model menjadi Report, bukan WithdrawRequest
     protected static ?string $model = Report::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
 
     protected static ?string $label = 'Report';
 
     public static function form(Form $form): Form
     {
-        // Resource ini hanya untuk tampilan data, jadi form bisa dikosongkan
-        return $form->schema([]);
-    }
+        return $form->schema([
+            Forms\Components\Select::make('booking_id')
+                ->label('Booking')
+                ->options(Booking::all()->pluck('id', 'id')) // Tampilkan daftar Booking ID
+                ->searchable()
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(function ($state, callable $set) {
+                    $booking = Booking::with('venue')->find($state);
 
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Admin Management';
+                    if ($booking) {
+                        // Isi data otomatis berdasarkan relasi Booking dan Venue
+                        $set('transaction', 'Booking at ' . $booking->venue->name);
+                        $set('total', $booking->total_payment ?? 0); // Ambil total_payment dari Booking
+                    }
+                }),
+
+            Forms\Components\TextInput::make('transaction')
+                ->label('Transaction')
+                ->disabled(), // Kolom ini otomatis diisi, jadi tidak perlu diinput
+
+            Forms\Components\TextInput::make('total')
+                ->label('Total')
+                ->numeric()
+                ->disabled(), // Kolom ini otomatis diisi, jadi tidak perlu diinput
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -41,35 +62,17 @@ class ReportResource extends Resource
                     ->label('Transaction')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('booking.id')
+                    ->label('Booking ID')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('total')
-                    ->label('Total')
+                    ->label('Total Payment')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
-                    ->sortable(),
-            ])
-            ->filters([
-                Tables\Filters\Filter::make('Mingguan')
-                    ->query(fn ($query) => $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])),
-                Tables\Filters\Filter::make('Bulanan')
-                    ->query(fn ($query) => $query->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])),
-                Tables\Filters\Filter::make('Tahunan')
-                    ->query(fn ($query) => $query->whereBetween('created_at', [now()->startOfYear(), now()->endOfYear()])),
-            ])
-            ->actions([])
-            ->bulkActions([
-                Tables\Actions\BulkAction::make('Ekspor Excel')
-                    ->action(function (array $records) {
-                        // Ekspor ke Excel
-                        return Excel::download(new ReportsExport($records), 'report.xlsx');
-                    }),
-                Tables\Actions\BulkAction::make('Ekspor PDF')
-                    ->action(function (array $records) {
-                        // Ekspor ke PDF
-                        $pdf = Pdf::loadView('exports.report', ['reports' => $records]);
-                        return $pdf->download('report.pdf');
-                    }),
+                    ->sortable()
+                    ->dateTime('d/m/Y H:i'),
             ]);
     }
 
@@ -77,6 +80,7 @@ class ReportResource extends Resource
     {
         return [
             'index' => Pages\ListReports::route('/'),
+            'create' => Pages\CreateReport::route('/create'), // Tambahkan halaman Create
         ];
     }
 }

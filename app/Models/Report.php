@@ -9,15 +9,14 @@ class Report extends Model
 {
     use HasFactory;
 
-    // Tambahkan relasi belongsTo ke Booking
+    protected $fillable = [
+        'booking_id',
+        'transaction',
+        'total',
+    ];
+
     public function booking()
     {
-        return $this->belongsTo(Booking::class);
-    }
-
-    // Tambahkan relasi belongsTo ke Venue (jika venue juga perlu dihubungkan)
-    public function venue()
-    {
-        return $this->belongsTo(Venue::class);
+        return $this->belongsTo(Booking::class, 'booking_id', 'id');
     }
 }

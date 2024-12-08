@@ -16,17 +16,36 @@ class Booking extends Model
         'start_time',
         'end_time',
         'tax_percentage',
-        'total_payment'
+        'total_payment',
+        'booking_id',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($booking) {
+            // Jika booking_id kosong, generate ID otomatis
+            if (empty($booking->booking_id)) {
+                $booking->booking_id = self::generateBookingId();
+            }
+        });
+    }
+
+    public static function generateBookingId()
+    {
+        do {
+            $bookingId = mt_rand(100000000, 999999999); // Angka acak 9 digit
+        } while (self::where('booking_id', $bookingId)->exists()); // Pastikan ID unik
+
+        return $bookingId;
+    }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the venue that owns the booking.
-     */
     public function venue()
     {
         return $this->belongsTo(Venue::class);

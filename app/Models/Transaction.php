@@ -18,6 +18,13 @@ class Transaction extends Model
         'payment_url',
     ];
 
+    public function index()
+{
+    $transactions = Transaction::with('user', 'venue', 'booking')->get(); // Muat relasi
+
+    return view('transactions.index', compact('transactions'));
+}
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -80,10 +80,8 @@ class BookingController extends Controller
                 'total_payment' => 'required|numeric',
             ]);
 
-            // Dapatkan hari dalam seminggu dari tanggal booking
-            $dayOfWeek = strtolower(\Carbon\Carbon::parse($request->booking_date)->format('l')); // Contoh output: 'monday', 'saturday'
-
-            // Cek apakah slot yang dipilih tersedia berdasarkan jadwal di tabel schedules
+            // Validasi apakah slot waktu tersedia di tabel schedules
+            $dayOfWeek = strtolower(Carbon::parse($request->booking_date)->format('l')); // Contoh: 'monday'
             $schedule = Schedule::where('venue_id', $request->venue_id)
                 ->where('day_of_week', $dayOfWeek)
                 ->where('start_time', '<=', $request->start_time)
@@ -92,14 +90,10 @@ class BookingController extends Controller
                 ->first();
 
             if (!$schedule) {
-                return response()->json([
-                    'code' => 422,
-                    'status' => 'failed',
-                    'message' => 'The selected time slot is not available',
-                ], 422);
+                return ResponseFormatter::error(null, 'The selected time slot is not available', 422);
             }
 
-            // Cek apakah slot yang dipilih sudah di-booking oleh pengguna lain
+            // Validasi apakah slot waktu sudah di-booking
             $isBooked = Booking::where('venue_id', $request->venue_id)
                 ->where('booking_date', $request->booking_date)
                 ->where(function ($query) use ($request) {
@@ -113,35 +107,22 @@ class BookingController extends Controller
                 ->exists();
 
             if ($isBooked) {
-                return response()->json([
-                    'code' => 422,
-                    'status' => 'failed',
-                    'message' => 'The selected time slot is already booked',
-                ], 422);
+                return ResponseFormatter::error(null, 'The selected time slot is already booked', 422);
             }
 
-            // Menggabungkan userId ke dalam request data
+            // Tambahkan user_id ke data yang akan disimpan
             $data = $request->all();
             $data['user_id'] = $userId;
 
-            // Membuat booking
+            // Membuat booking baru
             $booking = Booking::create($data);
 
-            return response()->json([
-                'code' => 201,
-                'status' => 'success',
-                'message' => 'Booking created successfully',
-                'data' => $booking,
-            ], 201);
+            return ResponseFormatter::success($booking, 'Booking created successfully', 201);
         } catch (\Exception $e) {
-            // Menangani error lainnya
-            return response()->json([
-                'code' => 500,
-                'status' => 'failed',
-                'message' => 'Failed to create booking: ' . $e->getMessage(),
-            ], 500);
+            return ResponseFormatter::error(null, 'Failed to create booking: ' . $e->getMessage(), 500);
         }
     }
+
 
 
 
