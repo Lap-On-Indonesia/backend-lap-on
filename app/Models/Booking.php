@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Booking extends Model
 {
@@ -21,25 +22,25 @@ class Booking extends Model
     ];
 
     protected static function boot()
-    {
-        parent::boot();
+{
+    parent::boot();
 
-        static::creating(function ($booking) {
-            // Jika booking_id kosong, generate ID otomatis
-            if (empty($booking->booking_id)) {
-                $booking->booking_id = self::generateBookingId();
-            }
-        });
-    }
+    static::creating(function ($booking) {
+        if (empty($booking->booking_id)) {
+            $booking->booking_id = self::generateBookingId();
+        }
+    });
+}
 
-    public static function generateBookingId()
-    {
-        do {
-            $bookingId = mt_rand(100000000, 999999999); // Angka acak 9 digit
-        } while (self::where('booking_id', $bookingId)->exists()); // Pastikan ID unik
+public static function generateBookingId()
+{
+    do {
+        $bookingId = strtoupper(Str::random(9)); // Generate string acak 9 karakter
+    } while (self::where('booking_id', $bookingId)->exists()); // Pastikan ID unik
 
-        return $bookingId;
-    }
+    return $bookingId;
+}
+
 
     public function user()
     {

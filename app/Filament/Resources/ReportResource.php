@@ -28,8 +28,8 @@ class ReportResource extends Resource
     {
         return $form->schema([
             Forms\Components\Select::make('booking_id')
-                ->label('Booking')
-                ->options(Booking::all()->pluck('id', 'id')) // Tampilkan daftar Booking ID
+                ->label('Booking ID')
+                ->options(Booking::all()->pluck('booking_id', 'id')) // Menggunakan booking_id dari tabel Booking
                 ->searchable()
                 ->required()
                 ->reactive()
@@ -48,7 +48,7 @@ class ReportResource extends Resource
                 ->disabled(), // Kolom ini otomatis diisi, jadi tidak perlu diinput
 
             Forms\Components\TextInput::make('total')
-                ->label('Total')
+                ->label('Total Payment')
                 ->numeric()
                 ->disabled(), // Kolom ini otomatis diisi, jadi tidak perlu diinput
         ]);
@@ -62,9 +62,10 @@ class ReportResource extends Resource
                     ->label('Transaction')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('booking.id')
-                    ->label('Booking ID')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('booking.booking_id')
+                    ->label('Booking ID') // Menggunakan kolom booking_id dari tabel Booking
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('total')
                     ->label('Total Payment')
                     ->numeric()

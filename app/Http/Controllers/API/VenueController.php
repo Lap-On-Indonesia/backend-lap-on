@@ -10,57 +10,83 @@ use Illuminate\Http\Request;
 
 class VenueController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $venues = Venue::with('owner', 'category', 'schedule')->get();
+        $search = $request->query('search'); // Parameter untuk pencarian
+        $venues = Venue::with('owner', 'category', 'schedule')
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%");
+            })
+            ->paginate(10); // Gunakan paginasi untuk mencegah masalah performa
+
         return ResponseFormatter::success($venues, 'Venues retrieved successfully');
     }
 
     public function store(Request $request)
     {
+        // Validasi data
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'owner_id' => 'required|exists:users,id',
-            'price' => 'required|numeric|min:0', // Validasi untuk price
-            // Tambahkan validasi lainnya sesuai kebutuhan
+            'price' => 'required|numeric|min:0', // Validasi untuk harga
+            'latitude' => 'required|numeric|between:-90,90', // Validasi latitude
+            'longitude' => 'required|numeric|between:-180,180', // Validasi longitude
         ]);
 
+        // Simpan data venue
         $venue = Venue::create($request->all());
+
         return ResponseFormatter::success($venue, 'Venue created successfully', 201);
     }
 
-
     public function show($id)
     {
-        $venue = Venue::with('owner', 'category', 'schedule')->findOrFail($id);
-        return ResponseFormatter::success($venue, 'Venue retrieved successfully');
+        try {
+            $venue = Venue::with('owner', 'category', 'schedule')->findOrFail($id);
+
+            return ResponseFormatter::success($venue, 'Venue retrieved successfully');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ResponseFormatter::error(null, 'Venue not found', 404);
+        }
     }
 
     public function update(Request $request, $id)
     {
+        // Validasi data
         $request->validate([
             'name' => 'sometimes|string|max:255',
             'location' => 'sometimes|string|max:255',
             'category_id' => 'sometimes|exists:categories,id',
             'owner_id' => 'sometimes|exists:users,id',
-            'price' => 'sometimes|numeric|min:0', // Validasi untuk price
-            // Tambahkan validasi lainnya sesuai kebutuhan
+            'price' => 'sometimes|numeric|min:0', // Validasi untuk harga
+            'latitude' => 'sometimes|numeric|between:-90,90', // Validasi latitude
+            'longitude' => 'sometimes|numeric|between:-180,180', // Validasi longitude
         ]);
 
-        $venue = Venue::findOrFail($id);
-        $venue->update($request->all());
+        try {
+            // Cari venue dan update data
+            $venue = Venue::findOrFail($id);
+            $venue->update($request->all());
 
-        return ResponseFormatter::success($venue, 'Venue updated successfully');
+            return ResponseFormatter::success($venue, 'Venue updated successfully');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ResponseFormatter::error(null, 'Venue not found', 404);
+        }
     }
 
     public function destroy($id)
     {
-        $venue = Venue::findOrFail($id);
-        $venue->delete();
+        try {
+            // Cari venue dan hapus
+            $venue = Venue::findOrFail($id);
+            $venue->delete();
 
-        return ResponseFormatter::success(null, 'Venue deleted successfully', 204);
+            return ResponseFormatter::success(null, 'Venue deleted successfully', 204);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ResponseFormatter::error(null, 'Venue not found', 404);
+        }
     }
 
     public function showbyCategoryId(Request $request)
@@ -77,7 +103,7 @@ class VenueController extends Controller
 
             $venues = Venue::with('owner', 'category', 'schedule')
                 ->where('category_id', $categoryId)
-                ->get();
+                ->paginate(10); // Paginate data untuk performa
 
             if ($venues->isEmpty()) {
                 return ResponseFormatter::error(null, 'No venues found for the given category', 404);
@@ -85,7 +111,7 @@ class VenueController extends Controller
 
             return ResponseFormatter::success($venues, 'Venues retrieved successfully for the given category');
         } else {
-            $venues = Venue::with('owner', 'category', 'schedule')->get();
+            $venues = Venue::with('owner', 'category', 'schedule')->paginate(10);
 
             if ($venues->isEmpty()) {
                 return ResponseFormatter::error(null, 'No venues available', 404);

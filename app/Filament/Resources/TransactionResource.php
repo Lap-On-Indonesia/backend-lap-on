@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TransactionResource\Pages;
-use App\Filament\Resources\TransactionResource\RelationManagers;
 use App\Models\Booking;
 use App\Models\Transaction;
 use App\Models\User;
@@ -16,8 +15,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TransactionResource extends Resource
 {
@@ -43,8 +40,9 @@ class TransactionResource extends Resource
                     ->options(Venue::all()->pluck('name', 'id'))
                     ->required(),
                 Select::make('booking_id')
-                    ->label('Booking')
-                    ->options(Booking::all()->pluck('id', 'id'))
+                    ->label('Booking ID')
+                    ->options(Booking::all()->pluck('booking_id', 'id'))
+                    ->searchable()
                     ->required(),
                 TextInput::make('total')
                     ->label('Total')
@@ -53,9 +51,11 @@ class TransactionResource extends Resource
                     ->step(0.01)
                     ->required(),
                 TextInput::make('status')
+                    ->label('Status')
                     ->required()
                     ->maxLength(10),
                 TextInput::make('payment_url')
+                    ->label('Payment URL')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -73,15 +73,19 @@ class TransactionResource extends Resource
                     ->label('Venue')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('booking.id')
+                TextColumn::make('booking.booking_id')
                     ->label('Booking ID')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('total')
+                    ->label('Total')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label('Status')
                     ->searchable(),
                 TextColumn::make('payment_url')
+                    ->label('Payment URL')
                     ->searchable(),
             ])
             ->filters([
@@ -91,9 +95,7 @@ class TransactionResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 

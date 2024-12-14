@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('image');
             $table->string('address');
             $table->string('link_maps');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
             $table->softDeletes();
 

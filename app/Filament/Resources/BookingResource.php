@@ -35,6 +35,7 @@ class BookingResource extends Resource
     {
         return $form
             ->schema([
+                // Hilangkan booking_id dari input pengguna
                 Select::make('user_id')
                     ->label('User')
                     ->options(User::all()->pluck('name', 'id'))
@@ -58,10 +59,15 @@ class BookingResource extends Resource
             ]);
     }
 
+
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                TextColumn::make('booking_id')
+                    ->label('Booking ID')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('user.name')
                     ->label('User')
                     ->searchable()

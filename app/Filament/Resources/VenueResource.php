@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\VenueResource\Pages;
-use App\Filament\Resources\VenueResource\RelationManagers;
 use App\Models\Category;
 use App\Models\Owner;
 use App\Models\Venue;
@@ -11,15 +10,13 @@ use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Forms\Components\ViewField;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
-use Filament\Forms\Components\TimePicker;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\ViewColumn;
+use Illuminate\Support\Facades\Log;
 
 class VenueResource extends Resource
 {
@@ -32,69 +29,130 @@ class VenueResource extends Resource
         return 'Admin Management';
     }
 
-    public static function form(Form $form): Form
+    public static function form(Forms\Form $form): Forms\Form
     {
         return $form
             ->schema([
                 Select::make('owner_id')
                     ->label('Owner')
-                    ->options(Owner::all()->pluck('name', 'id'))
+                    ->options(Owner::query()->pluck('name', 'id'))
                     ->searchable()
                     ->required(),
+
                 Select::make('category_id')
                     ->label('Category')
-                    ->options(Category::all()->pluck('name', 'id'))
+                    ->options(Category::query()->pluck('name', 'id'))
                     ->searchable()
                     ->required(),
+
                 TextInput::make('name')
+                    ->label('Venue Name')
                     ->required()
                     ->maxLength(100),
+
                 TextInput::make('description')
+                    ->label('Description')
                     ->required(),
+
                 FileUpload::make('image')
-                    ->label('Venue Upload')
                     ->disk('public')
                     ->directory('venue')
                     ->image()
                     ->required(),
+
                 TextInput::make('address')
+                    ->label('Address')
                     ->required(),
+
                 TextInput::make('link_maps')
+                    ->label('Google Maps Link')
+                    ->maxLength(255)
+                    ->required(),
+
+                TextInput::make('latitude')
+                    ->label('Latitude')
+                    ->numeric()
                     ->required()
-                    ->maxLength(255),
+                    ->rule('between:-90,90'),
+
+                TextInput::make('longitude')
+                    ->label('Longitude')
+                    ->numeric()
+                    ->required()
+                    ->rule('between:-180,180'),
+
+                ViewField::make('map')
+                    ->view('components.map-view')
+                    ->label('Peta Lokasi')
+                    ->extraAttributes(function ($record) {
+                        Log::info('ExtraAttributes function called'); // Debugging
+
+                        if ($record) {
+                            Log::info('Record Data:', $record->toArray()); // Log data untuk verifikasi
+                            return [
+                                'latitude' => (float) $record->latitude,
+                                'longitude' => (float) $record->longitude,
+                                'id' => $record->id,
+                            ];
+                        }
+
+                        Log::warning('Record is null'); // Jika record tidak tersedia
+                        return [
+                            'latitude' => 0,
+                            'longitude' => 0,
+                            'id' => null,
+                        ];
+                    }),
             ]);
     }
 
-    public static function table(Table $table): Table
+    public static function table(Tables\Table $table): Tables\Table
     {
         return $table
             ->columns([
-                TextColumn::make('owner.name')->label('Owner')->searchable(),
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('description'),
-                TextColumn::make('category.name')->label('Category'),
-                ImageColumn::make('image')->width(100)->height(100),
-                TextColumn::make('address')->searchable(),
-                TextColumn::make('link_maps'),
-            ])
-            ->filters([
-                //
+                TextColumn::make('owner.name')
+                    ->label('Owner')
+                    ->searchable(),
+
+                TextColumn::make('name')
+                    ->label('Venue Name')
+                    ->searchable(),
+
+                TextColumn::make('description')
+                    ->label('Description'),
+
+                TextColumn::make('category.name')
+                    ->label('Category'),
+
+                ImageColumn::make('image')
+                    ->label('Image')
+                    ->width(100)
+                    ->height(100),
+
+                TextColumn::make('address')
+                    ->label('Address')
+                    ->searchable(),
+
+                TextColumn::make('latitude')
+                    ->label('Latitude'),
+
+                TextColumn::make('longitude')
+                    ->label('Longitude'),
+
+                ViewColumn::make('map')
+                    ->view('components.map-view')
+                    ->extraAttributes(fn ($record) => [
+                        'latitude' => (float) ($record->latitude ?? 0),
+                        'longitude' => (float) ($record->longitude ?? 0),
+                        'id' => $record->id ?? null,
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

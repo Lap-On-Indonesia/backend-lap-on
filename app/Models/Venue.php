@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Schedule;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Venue extends Model
 {
@@ -18,7 +17,41 @@ class Venue extends Model
         'image',
         'address',
         'link_maps',
+        'latitude',
+        'longitude',
     ];
+
+    protected $casts = [
+        'latitude' => 'float',
+        'longitude' => 'float',
+    ];
+
+    /**
+     * Boot method to add model events.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Ensure latitude and longitude are valid numbers before saving.
+        static::saving(function ($model) {
+            if (!is_numeric($model->latitude) || !is_numeric($model->longitude)) {
+                throw new \Exception('Latitude and Longitude must be valid numbers.');
+            }
+
+            if ($model->latitude < -90 || $model->latitude > 90) {
+                throw new \Exception('Latitude must be between -90 and 90 degrees.');
+            }
+
+            if ($model->longitude < -180 || $model->longitude > 180) {
+                throw new \Exception('Longitude must be between -180 and 180 degrees.');
+            }
+        });
+    }
+
+    /**
+     * Relationships
+     */
 
     public function category()
     {
