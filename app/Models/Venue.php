@@ -15,7 +15,6 @@ class Venue extends Model
         'name',
         'description',
         'image',
-        'address',
         'link_maps',
         'latitude',
         'longitude',
