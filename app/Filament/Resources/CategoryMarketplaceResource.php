@@ -26,6 +26,11 @@ class CategoryMarketplaceResource extends Resource
         return 'Admin Management';
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Category Product';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

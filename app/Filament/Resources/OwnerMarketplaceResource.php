@@ -34,6 +34,12 @@ class OwnerMarketplaceResource extends Resource
         return 'Admin Management';
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Sellers';
+    }
+
+
     protected function afterSave($record): void
     {
         // Mengecek apakah status berubah
