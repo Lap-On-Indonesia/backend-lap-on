@@ -13,7 +13,7 @@ class RegisterOwnerController extends Controller
     // Menampilkan form register
     public function showRegistrationForm()
     {
-        return view('register_owner.register'); // Pastikan Anda memiliki view `auth.register` untuk form register
+        return view('register_owner.register'); // Pastikan Anda memiliki view `register_owner.register` untuk form register
     }
 
     // Proses registrasi pengguna baru
@@ -31,15 +31,19 @@ class RegisterOwnerController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Simpan foto toko
-        // Pastikan file photo_store ada
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        // dd($request->file('photo_store'));
+        // Periksa apakah email sudah terdaftar di Owner atau User
+        if (Owner::where('email', $request->email)->exists() || User::where('email', $request->email)->exists()) {
+            return redirect()->back()->with('error', 'Email sudah terdaftar. Silakan gunakan email yang berbeda.')->withInput();
+        }
+
+        // Simpan foto toko
         if ($request->hasFile('photo_store')) {
-            // Simpan foto toko
             $photoPath = $request->file('photo_store')->store('photos', 'public');
         } else {
-            // Jika file tidak ditemukan, kembalikan dengan pesan error
             return redirect()->back()->withErrors(['photo_store' => 'Photo store is required.'])->withInput();
         }
 
@@ -62,7 +66,7 @@ class RegisterOwnerController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Redirect ke halaman login atau halaman lain
-        return view('status.index')->with('success', 'Registration successful!');
+        // Redirect ke halaman status dengan pesan sukses
+        return view('status.index')->with('success', 'Registrasi berhasil!');
     }
 }

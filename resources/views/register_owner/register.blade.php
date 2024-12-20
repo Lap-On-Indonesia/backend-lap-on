@@ -12,7 +12,7 @@
 
     <title>Register Venue</title>
 </head>
-++++                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        aa
+
 <body>
     <section class="vh-100">
         <div class="container h-100 p-5">
@@ -25,6 +25,18 @@
 
                                     <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Register Venue</p>
 
+                                    <!-- Flash Messages -->
+                                    @if (session('success'))
+                                        <div class="alert alert-success">
+                                            {{ session('success') }}
+                                        </div>
+                                    @endif
+                                    @if (session('error'))
+                                        <div class="alert alert-danger">
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
+
                                     <form class="mx-1 mx-md-4" method="POST" action="{{ route('register-owner') }}"
                                         enctype="multipart/form-data">
                                         @csrf
@@ -32,49 +44,75 @@
                                         <div class="form-outline mb-3">
                                             <label for="name" class="form-label">Nama</label>
                                             <input type="text" class="form-control" name="name" id="name"
-                                                placeholder="Nama lengkap" required>
+                                                placeholder="Nama lengkap" value="{{ old('name') }}" required>
+                                            @error('name')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
 
                                         <div class="form-outline mb-3">
                                             <label for="email" class="form-label">Email</label>
                                             <input type="email" class="form-control" name="email" id="email"
-                                                placeholder="Email" required>
+                                                placeholder="Email" value="{{ old('email') }}" required>
+                                            @error('email')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
 
                                         <div class="form-outline mb-3">
                                             <label for="phone" class="form-label">Nomor Telepon</label>
                                             <input type="text" class="form-control" name="phone" id="phone"
-                                                placeholder="Nomor telepon" required>
+                                                placeholder="Nomor telepon" value="{{ old('phone') }}" required>
+                                            @error('phone')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
 
                                         <div class="form-outline mb-3">
                                             <label for="store_name" class="form-label">Nama Toko</label>
                                             <input type="text" class="form-control" name="store_name" id="store_name"
-                                                placeholder="Nama toko" required>
+                                                placeholder="Nama toko" value="{{ old('store_name') }}" required>
+                                            @error('store_name')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
 
                                         <div class="form-outline mb-3">
                                             <label for="store_address" class="form-label">Alamat Toko</label>
                                             <input type="text" class="form-control" name="store_address"
-                                                id="store_address" placeholder="Alamat toko" required>
+                                                id="store_address" placeholder="Alamat toko"
+                                                value="{{ old('store_address') }}" required>
+                                            @error('store_address')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
 
                                         <div class="form-outline mb-3">
                                             <label for="photo_store" class="form-label">Foto Venue/Lapangan</label>
                                             <input type="file" class="form-control" name="photo_store"
                                                 id="photo_store" accept="image/*" required>
+                                            @error('photo_store')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
 
                                         <div class="form-outline mb-3">
                                             <label for="link_maps" class="form-label">Link Google Maps</label>
                                             <input type="url" class="form-control" name="link_maps" id="link_maps"
-                                                placeholder="Link Google Maps toko" required>
+                                                placeholder="Link Google Maps toko" value="{{ old('link_maps') }}"
+                                                required>
+                                            @error('link_maps')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
 
                                         <div class="form-outline mb-3">
                                             <label for="password" class="form-label">Password</label>
                                             <input type="password" class="form-control" name="password" id="password"
                                                 placeholder="Password" required>
+                                            @error('password')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
 
                                         <div class="form-outline mb-3">

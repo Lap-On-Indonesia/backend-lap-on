@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Models\OwnerMarketplace;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,7 +13,7 @@ class RegisterOwnerMarketplaceController extends Controller
     // Menampilkan form register
     public function showRegistrationForm()
     {
-        return view('register_owner_marketplace.register_marketplace'); // Pastikan Anda memiliki view `auth.register` untuk form register
+        return view('register_owner_marketplace.register_marketplace'); // Pastikan view ini ada
     }
 
     // Proses registrasi pengguna baru
@@ -27,23 +27,27 @@ class RegisterOwnerMarketplaceController extends Controller
             'store_name' => 'required|string|max:255',
             'store_address' => 'required|string|max:255',
             'link_maps' => 'required|url',
-            'photo_store' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk photo_store
+            'photo_store' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Simpan foto toko
-        // Pastikan file photo_store ada
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        // dd($request->file('photo_store'));
+        // Periksa apakah email sudah terdaftar
+        if (OwnerMarketplace::where('email', $request->email)->exists() || User::where('email', $request->email)->exists()) {
+            return redirect()->back()->with('error', 'Email sudah terdaftar. Silakan gunakan email yang berbeda.')->withInput();
+        }
+
+        // Simpan foto toko
         if ($request->hasFile('photo_store')) {
-            // Simpan foto toko
             $photoPath = $request->file('photo_store')->store('photos', 'public');
         } else {
-            // Jika file tidak ditemukan, kembalikan dengan pesan error
             return redirect()->back()->withErrors(['photo_store' => 'Photo store is required.'])->withInput();
         }
 
-        // Buat data Owner terlebih dahulu
+        // Buat data OwnerMarketplace
         $owner = OwnerMarketplace::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -54,7 +58,7 @@ class RegisterOwnerMarketplaceController extends Controller
             'photo_store' => $photoPath,
         ]);
 
-        // Buat data User dan kaitkan dengan Owner yang baru dibuat
+        // Buat data User
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -62,7 +66,7 @@ class RegisterOwnerMarketplaceController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Redirect ke halaman login atau halaman lain
-        return view('status.index')->with('success', 'Registration successful!');
+        // Redirect ke halaman status dengan pesan sukses
+        return view('status.index')->with('success', 'Registrasi berhasil!');
     }
 }
