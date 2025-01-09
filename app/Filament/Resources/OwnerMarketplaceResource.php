@@ -34,9 +34,24 @@ class OwnerMarketplaceResource extends Resource
         return 'Admin Management';
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'Seller';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Sellers';
+    }
+
     public static function getNavigationLabel(): string
     {
         return 'Sellers';
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return 'Seller';
     }
 
 

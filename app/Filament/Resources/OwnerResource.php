@@ -71,10 +71,10 @@ class OwnerResource extends Resource
                     ])
                     ->default('pending'),
                 TextInput::make('store_name')
-                    ->label('Nama Store')
+                    ->label('Nama Lapangan')
                     ->required(),
                 TextInput::make('store_address')
-                    ->label('Alamat Store')
+                    ->label('Alamat Lapangan')
                     ->required(),
                 TextInput::make('link_maps')
                     ->label('Link Maps')
@@ -123,12 +123,12 @@ class OwnerResource extends Resource
 
 
                 TextColumn::make('store_name')
-                    ->label('Nama Store')
+                    ->label('Nama Lapangan')
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('store_address')
-                    ->label('Alamat Store')
+                    ->label('Alamat Lapangan')
                     ->sortable()
                     ->searchable(),
 

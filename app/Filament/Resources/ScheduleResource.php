@@ -46,6 +46,7 @@ class ScheduleResource extends Resource
                         'saturday' => 'Saturday',
                         'sunday' => 'Sunday',
                     ])
+                    ->multiple()
                     ->required()
                     ->label('Day of Week'),
                 TimePicker::make('start_time')
@@ -76,7 +77,8 @@ class ScheduleResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('day_of_week')
-                    ->label('Day of Week')
+                    ->label('Days of Week')
+                    ->formatStateUsing(fn($state) => is_array($state) ? implode(', ', $state) : $state)
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('start_time')

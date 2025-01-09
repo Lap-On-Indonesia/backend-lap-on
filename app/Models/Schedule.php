@@ -17,6 +17,10 @@ class Schedule extends Model
         'is_available',
     ];
 
+    protected $casts = [
+        'day_of_week' => 'array', // Tambahkan ini
+    ];
+
     public function venue()
     {
         return $this->belongsTo(Venue::class);

@@ -20,9 +20,10 @@ class ScheduleController extends Controller
 
             // Ambil semua jadwal yang tersedia pada hari tersebut untuk venue yang dipilih
             $schedules = Schedule::where('venue_id', $venue->id)
-                ->where('day_of_week', strtolower($dayOfWeek)) // Gunakan lowercase untuk keseragaman
+                ->whereJsonContains('day_of_week', strtolower($dayOfWeek)) // Gunakan whereJsonContains untuk array
                 ->where('is_available', true)
                 ->get();
+
 
             // Ambil booking untuk venue tersebut pada tanggal yang dipilih
             $bookedSlots = Booking::where('venue_id', $venue->id)

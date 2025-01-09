@@ -7,6 +7,8 @@ use App\Filament\Resources\BookingResource\RelationManagers;
 use App\Models\Booking;
 use App\Models\User;
 use App\Models\Venue;
+use App\Models\Schedule;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -17,8 +19,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BookingResource extends Resource
 {
@@ -32,33 +32,67 @@ class BookingResource extends Resource
     }
 
     public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                // Hilangkan booking_id dari input pengguna
-                Select::make('user_id')
-                    ->label('User')
-                    ->options(User::all()->pluck('name', 'id'))
-                    ->required(),
-                Select::make('venue_id')
-                    ->label('Venue')
-                    ->options(Venue::all()->pluck('name', 'id'))
-                    ->required(),
-                DatePicker::make('booking_date')
-                    ->required(),
-                TimePicker::make('start_time')
-                    ->required(),
-                TimePicker::make('end_time')
-                    ->required(),
-                TextInput::make('tax_percentage')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('total_payment')
-                    ->required()
-                    ->numeric(),
-            ]);
-    }
+{
+    return $form
+        ->schema([
+            Select::make('user_id') // Menambahkan pemilihan pengguna
+                ->label('User')
+                ->options(User::all()->pluck('name', 'id'))
+                ->required(),
 
+            Select::make('venue_id')
+                ->label('Venue')
+                ->options(Venue::all()->pluck('name', 'id'))
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(function ($state, callable $set = null) {
+                    if ($set) {
+                        $set('start_time', null);
+                        $set('end_time', null);
+                    }
+                }),
+
+            DatePicker::make('booking_date')
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(function ($state, callable $get = null, callable $set = null) {
+                    if ($get && $set) {
+                        $venueId = $get('venue_id');
+
+                        if ($venueId && $state) {
+                            $schedule = Schedule::where('venue_id', $venueId)
+                                ->whereJsonContains('day_of_week', strtolower(Carbon::parse($state)->format('l')))
+                                ->where('is_available', true)
+                                ->first();
+
+                            if ($schedule) {
+                                $set('start_time', $schedule->start_time);
+                                $set('end_time', $schedule->end_time);
+                            } else {
+                                $set('start_time', null);
+                                $set('end_time', null);
+                            }
+                        }
+                    }
+                }),
+
+            TimePicker::make('start_time') // Aktifkan input untuk start_time
+                ->required()
+                ->label('Start Time'),
+
+            TimePicker::make('end_time') // Aktifkan input untuk end_time
+                ->required()
+                ->label('End Time'),
+
+            TextInput::make('tax_percentage')
+                ->required()
+                ->numeric(),
+
+            TextInput::make('total_payment')
+                ->required()
+                ->numeric(),
+        ]);
+}
 
     public static function table(Table $table): Table
     {
@@ -68,7 +102,7 @@ class BookingResource extends Resource
                     ->label('Booking ID')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('user.name')
+                TextColumn::make('user.name') // Menambahkan kolom untuk nama pengguna
                     ->label('User')
                     ->searchable()
                     ->sortable(),
