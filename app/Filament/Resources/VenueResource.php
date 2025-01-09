@@ -77,6 +77,14 @@ class VenueResource extends Resource
                     ->required()
                     ->rule('between:-180,180'),
 
+                TextInput::make('price')
+                    ->label('Price')
+                    ->numeric()
+                    ->required()
+                    ->rule('min:0')
+                    ->prefix('IDR ')
+                    ->suffix(',-'), // Menambahkan simbol mata uang dan koma
+
                 ViewField::make('map')
                     ->view('components.map-view')
                     ->label('Peta Lokasi')
@@ -130,6 +138,10 @@ class VenueResource extends Resource
 
                 TextColumn::make('longitude')
                     ->label('Longitude'),
+
+                TextColumn::make('price')
+                    ->label('Price')
+                    ->money('IDR'), // Format harga dalam IDR
 
                 ViewColumn::make('map')
                     ->view('components.map-view')

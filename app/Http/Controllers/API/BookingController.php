@@ -72,7 +72,6 @@ class BookingController extends Controller
             // Validasi data request
             $request->validate([
                 'venue_id' => 'required|exists:venues,id',
-                'category_id' => 'required|exists:categories,id',
                 'booking_date' => 'required|date',
                 'start_time' => 'required|date_format:H:i',
                 'end_time' => 'required|date_format:H:i|after:start_time',
@@ -80,17 +79,24 @@ class BookingController extends Controller
                 'total_payment' => 'required|numeric',
             ]);
 
-            // Validasi apakah slot waktu tersedia di tabel schedules
-            $dayOfWeek = strtolower(Carbon::parse($request->booking_date)->format('l')); // Contoh: 'monday'
+            // Mendapatkan jadwal venue
+            $dayOfWeek = strtolower(Carbon::parse($request->booking_date)->format('l'));
             $schedule = Schedule::where('venue_id', $request->venue_id)
-                ->where('day_of_week', $dayOfWeek)
-                ->where('start_time', '<=', $request->start_time)
-                ->where('end_time', '>=', $request->end_time)
-                ->where('is_available', true)
+                ->whereJsonContains('day_of_week', $dayOfWeek)
                 ->first();
 
             if (!$schedule) {
-                return ResponseFormatter::error(null, 'The selected time slot is not available', 422);
+                return ResponseFormatter::error(null, 'No schedule found for the selected venue on this date', 422);
+            }
+
+            // Cek apakah waktu mulai dan selesai berada dalam rentang waktu yang ditentukan
+            $scheduleStartTime = Carbon::parse($schedule->start_time);
+            $scheduleEndTime = Carbon::parse($schedule->end_time);
+            $startTime = Carbon::parse($request->start_time);
+            $endTime = Carbon::parse($request->end_time);
+
+            if ($startTime < $scheduleStartTime || $endTime > $scheduleEndTime) {
+                return ResponseFormatter::error(null, 'Booking time must be within the venue schedule: ' . $schedule->start_time . ' to ' . $schedule->end_time, 422);
             }
 
             // Validasi apakah slot waktu sudah di-booking

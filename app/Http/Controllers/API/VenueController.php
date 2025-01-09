@@ -27,12 +27,13 @@ class VenueController extends Controller
         // Validasi data
         $request->validate([
             'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+            'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'owner_id' => 'required|exists:users,id',
-            'price' => 'required|numeric|min:0', // Validasi untuk harga
+            'link_maps' => 'required|string|max:255',
             'latitude' => 'required|numeric|between:-90,90', // Validasi latitude
             'longitude' => 'required|numeric|between:-180,180', // Validasi longitude
+            'price' => 'required|numeric|min:0', // Validasi untuk harga
         ]);
 
         // Simpan data venue
@@ -57,12 +58,13 @@ class VenueController extends Controller
         // Validasi data
         $request->validate([
             'name' => 'sometimes|string|max:255',
-            'location' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
             'category_id' => 'sometimes|exists:categories,id',
             'owner_id' => 'sometimes|exists:users,id',
-            'price' => 'sometimes|numeric|min:0', // Validasi untuk harga
+            'link_maps' => 'sometimes|string|max:255',
             'latitude' => 'sometimes|numeric|between:-90,90', // Validasi latitude
             'longitude' => 'sometimes|numeric|between:-180,180', // Validasi longitude
+            'price' => 'sometimes|numeric|min:0', // Validasi untuk harga
         ]);
 
         try {

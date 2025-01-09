@@ -18,21 +18,19 @@ class Venue extends Model
         'link_maps',
         'latitude',
         'longitude',
+        'price', // Kolom price ditambahkan oleh migrasi
     ];
 
     protected $casts = [
         'latitude' => 'float',
         'longitude' => 'float',
+        'price' => 'decimal:2', // Cast price sebagai decimal dengan 2 desimal
     ];
 
-    /**
-     * Boot method to add model events.
-     */
     protected static function boot()
     {
         parent::boot();
 
-        // Ensure latitude and longitude are valid numbers before saving.
         static::saving(function ($model) {
             if (!is_numeric($model->latitude) || !is_numeric($model->longitude)) {
                 throw new \Exception('Latitude and Longitude must be valid numbers.');
@@ -47,10 +45,6 @@ class Venue extends Model
             }
         });
     }
-
-    /**
-     * Relationships
-     */
 
     public function category()
     {
