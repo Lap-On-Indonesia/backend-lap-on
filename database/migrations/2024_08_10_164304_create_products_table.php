@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id('product_id');
+            $table->string('product_id')->unique()->primary();
             $table->string('name_product');
             $table->string('image');
             $table->foreignId('category_marketplace_id');
             $table->foreign('category_marketplace_id')->references('id')->on('category_marketplaces')->onDelete('cascade');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
+            $table->integer('stock')->default(0); // Menambahkan field stock
             $table->timestamps();
             $table->softDeletes();
         });

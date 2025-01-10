@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\CategoryMarketplace;
 use App\Models\OwnerMarketplace;
 use App\Models\Product;
@@ -59,6 +58,11 @@ class ProductResource extends Resource
                     ->disk('public')
                     ->directory('product')
                     ->required(),
+                TextInput::make('stock')
+                    ->label('Stock')
+                    ->numeric()
+                    ->minValue(0)
+                    ->required(),
             ]);
     }
 
@@ -66,6 +70,10 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('product_id')
+                    ->label('Product ID')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('name_product')
                     ->label('Nama Produk'),
                 TextColumn::make('categoryMarketplace.name')
@@ -79,6 +87,8 @@ class ProductResource extends Resource
                 TextColumn::make('price')
                     ->label('Harga')
                     ->money('IDR', true),
+                TextColumn::make('stock')
+                    ->label('Stock'),
                 TextColumn::make('description')
                     ->label('Deskripsi'),
             ])

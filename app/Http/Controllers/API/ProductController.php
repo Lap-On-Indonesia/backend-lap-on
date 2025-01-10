@@ -14,15 +14,24 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'venue_id' => 'required|exists:venues,id',
-            'transaction_marketplace_id' => 'required|exists:transaction_marketplaces,id',
             'name_product' => 'required|string|max:255',
-            'category_product' => 'required|string|max:255',
+            'category_marketplace_id' => 'required|exists:category_marketplaces,id',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'stock' => 'required|integer|min:0',
         ]);
 
-        $product = Product::create($request->all());
+        $imagePath = $request->file('image')->store('product', 'public');
+
+        $product = Product::create([
+            'name_product' => $request->name_product,
+            'category_marketplace_id' => $request->category_marketplace_id,
+            'description' => $request->description,
+            'price' => $request->price,
+            'image' => $imagePath,
+            'stock' => $request->stock,
+        ]);
 
         return ResponseFormatter::success($product, 'Product created successfully', 201);
     }
@@ -31,16 +40,28 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'venue_id' => 'required|exists:venues,id',
-            'transaction_marketplace_id' => 'required|exists:transaction_marketplaces,id',
             'name_product' => 'required|string|max:255',
-            'category_product' => 'required|string|max:255',
+            'category_marketplace_id' => 'required|exists:category_marketplaces,id',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'stock' => 'required|integer|min:0',
         ]);
 
         $product = Product::findOrFail($id);
-        $product->update($request->all());
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('product', 'public');
+            $product->image = $imagePath;
+        }
+
+        $product->update([
+            'name_product' => $request->name_product,
+            'category_marketplace_id' => $request->category_marketplace_id,
+            'description' => $request->description,
+            'price' => $request->price,
+            'stock' => $request->stock,
+        ]);
 
         return ResponseFormatter::success($product, 'Product updated successfully');
     }
