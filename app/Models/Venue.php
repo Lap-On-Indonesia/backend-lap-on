@@ -43,6 +43,10 @@ class Venue extends Model
             if ($model->longitude < -180 || $model->longitude > 180) {
                 throw new \Exception('Longitude must be between -180 and 180 degrees.');
             }
+
+            if (auth()->check() && !auth()->user()->hasRole('super_admin')) {
+                $model->owner_id = auth()->user()->owner_id;
+            }
         });
     }
 

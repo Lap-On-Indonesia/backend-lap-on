@@ -13,6 +13,15 @@
     <p>Status akun marketplace Anda telah diperbarui menjadi:
         <strong>{{ $ownerMarketplace->status ?? 'Diterima' }}</strong>.
     </p>
+
+    <p>Silakan login ke dashboard admin Anda untuk melihat detail lebih lanjut:</p>
+
+    <p>
+        <a href="{{ env('APP_URL') }}/admin/login" style="color: #007bff; text-decoration: none;">
+            Klik di sini untuk Login
+        </a>
+    </p>
+
     <p>Terima kasih telah menggunakan layanan kami.</p>
 </body>
 

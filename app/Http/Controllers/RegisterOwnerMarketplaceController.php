@@ -64,6 +64,7 @@ class RegisterOwnerMarketplaceController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'owner_marketplace_id' => $owner->id
         ]);
 
         // Redirect ke halaman status dengan pesan sukses

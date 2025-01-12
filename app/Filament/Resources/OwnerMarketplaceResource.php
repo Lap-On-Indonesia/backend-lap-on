@@ -90,7 +90,7 @@ class OwnerMarketplaceResource extends Resource
                     ->directory('owner_ktp_marketplace'),
                 TextInput::make('no_rekening')
                     ->label('Nomor Rekening'),
-                Select::make('status')
+                auth()->user()->hasRole('super_admin') ? Select::make('status')
                     ->label('Status')
                     ->options([
                         'pending' => 'Pending',
@@ -98,7 +98,10 @@ class OwnerMarketplaceResource extends Resource
                         'reject' => 'Reject',
                     ])
                     ->default('pending')
-                    ->required(),
+                    ->required() : TextInput::make('status')
+                    ->label('Status')
+                    ->disabled()
+                    ->default(fn () => OwnerMarketplace::find(auth()->user()->owner_marketplace_id)?->status ?? 'N/A'),
                 TextInput::make('store_name')
                     ->label('Nama Store')
                     ->required(),

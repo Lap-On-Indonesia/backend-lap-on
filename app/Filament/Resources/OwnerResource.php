@@ -62,14 +62,18 @@ class OwnerResource extends Resource
                     ->directory('owner_ktp_marketplace'),
                 TextInput::make('no_rekening')
                     ->label('Nomor Rekening'),
-                Select::make('status')
+                auth()->user()->hasRole('super_admin') ? Select::make('status')
                     ->label('Status')
                     ->options([
                         'pending' => 'Pending',
                         'accept' => 'Accept',
                         'reject' => 'Reject',
                     ])
-                    ->default('pending'),
+                    ->default('pending')
+                    ->required() : TextInput::make('status')
+                    ->label('Status')
+                    ->disabled()
+                    ->default(fn () => Owner::find(auth()->user()->owner_id)?->status ?? 'N/A'),
                 TextInput::make('store_name')
                     ->label('Nama Lapangan')
                     ->required(),

@@ -42,10 +42,12 @@ class VenueResource extends Resource
                     ->options(Owner::query()->pluck('name', 'id'))
                     ->searchable()
                     ->required()
-                : TextInput::make('owner_name')
-                    ->label('Owner Name')
+                : TextInput::make('owner_id')
+                    ->label('Owner ID')
                     ->disabled()
-                    ->default(fn () => Owner::find(auth()->user()->owner_id)?->name ?? 'N/A'),
+                    ->default(fn () => auth()->user()->owner_id)
+                    ->required(),
+
 
                 Select::make('category_id')
                     ->label('Category')

@@ -32,6 +32,11 @@ class TransactionResource extends Resource
         return 'Transaction Menu';
     }
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
