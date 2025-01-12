@@ -17,6 +17,8 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class VenueResource extends Resource
 {
@@ -33,11 +35,17 @@ class VenueResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('owner_id')
+
+                auth()->user()->hasRole('super_admin')
+                ? Select::make('owner_id')
                     ->label('Owner')
                     ->options(Owner::query()->pluck('name', 'id'))
                     ->searchable()
-                    ->required(),
+                    ->required()
+                : TextInput::make('owner_name')
+                    ->label('Owner Name')
+                    ->disabled()
+                    ->default(fn () => Owner::find(auth()->user()->owner_id)?->name ?? 'N/A'),
 
                 Select::make('category_id')
                     ->label('Category')
@@ -171,5 +179,19 @@ class VenueResource extends Resource
             'create' => Pages\CreateVenue::route('/create'),
             'edit' => Pages\EditVenue::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if (auth()->check() && auth()->user()->hasRole('super_admin')) {
+            return parent::getEloquentQuery();
+        }
+
+        if (auth()->check() && !empty(auth()->user()->owner_ud)) {
+            return parent::getEloquentQuery()->where('owner_id', auth()->user()->owner_id);
+        }
+
+        // Default: Jika tidak memenuhi syarat, kembalikan query kosong
+        return parent::getEloquentQuery()->whereRaw('1 = 0');
     }
 }
