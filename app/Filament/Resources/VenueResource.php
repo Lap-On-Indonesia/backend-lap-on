@@ -69,13 +69,15 @@ class VenueResource extends Resource
                     ->label('Latitude')
                     ->numeric()
                     ->required()
-                    ->rule('between:-90,90'),
+                    ->rule('between:-90,90')
+                    ->default('-6.3437692'), // Default latitude
 
                 TextInput::make('longitude')
                     ->label('Longitude')
                     ->numeric()
                     ->required()
-                    ->rule('between:-180,180'),
+                    ->rule('between:-180,180')
+                    ->default('106.6757172'), // Default longitude
 
                 TextInput::make('price')
                     ->label('Price')
@@ -102,8 +104,8 @@ class VenueResource extends Resource
 
                         Log::warning('Record is null'); // Jika record tidak tersedia
                         return [
-                            'latitude' => 0,
-                            'longitude' => 0,
+                            'latitude' => -6.3437692, // Default latitude
+                            'longitude' => 106.6757172, // Default longitude
                             'id' => null,
                         ];
                     }),
@@ -134,10 +136,12 @@ class VenueResource extends Resource
                     ->height(100),
 
                 TextColumn::make('latitude')
-                    ->label('Latitude'),
+                    ->label('Latitude')
+                    ->sortable(), // Menambahkan sortable
 
                 TextColumn::make('longitude')
-                    ->label('Longitude'),
+                    ->label('Longitude')
+                    ->sortable(), // Menambahkan sortable
 
                 TextColumn::make('price')
                     ->label('Price')
@@ -145,9 +149,10 @@ class VenueResource extends Resource
 
                 ViewColumn::make('map')
                     ->view('components.map-view')
+                    ->label('Peta Lokasi')
                     ->extraAttributes(fn ($record) => [
-                        'latitude' => (float) ($record->latitude ?? 0),
-                        'longitude' => (float) ($record->longitude ?? 0),
+                        'latitude' => (float) ($record->latitude ?? -6.3437692),
+                        'longitude' => (float) ($record->longitude ?? 106.6757172),
                         'id' => $record->id ?? null,
                     ]),
             ])

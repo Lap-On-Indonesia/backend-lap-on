@@ -16,14 +16,8 @@ class Transaction extends Model
         'total',
         'status',
         'payment_url',
+        'tax_percentage',
     ];
-
-    public function index()
-{
-    $transactions = Transaction::with('user', 'venue', 'booking')->get(); // Muat relasi
-
-    return view('transactions.index', compact('transactions'));
-}
 
     public function user()
     {

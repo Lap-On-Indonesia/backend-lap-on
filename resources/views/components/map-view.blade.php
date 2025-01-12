@@ -1,6 +1,4 @@
 <div>
-    <p>Latitude (Debug): {{ $attributes->get('latitude') }}</p>
-    <p>Longitude (Debug): {{ $attributes->get('longitude') }}</p>
     <div id="map-{{ $attributes->get('id') }}" style="height: 200px; width: 100%;"></div>
 </div>
 
@@ -13,12 +11,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Ambil data latitude dan longitude dari atribut
-        const latitude = parseFloat('{{ $attributes->get('latitude') ?? 0 }}');
-        const longitude = parseFloat('{{ $attributes->get('longitude') ?? 0 }}');
+        const latitude = parseFloat('{{ $attributes->get('latitude') ?? -6.3437692 }}');
+        const longitude = parseFloat('{{ $attributes->get('longitude') ?? 106.6757172 }}');
         const mapId = "map-{{ $attributes->get('id') }}";
-
-        console.log("Latitude: ", latitude);
-        console.log("Longitude: ", longitude);
 
         // Validasi apakah data latitude dan longitude valid
         if (!isNaN(latitude) && !isNaN(longitude) && latitude !== 0 && longitude !== 0) {

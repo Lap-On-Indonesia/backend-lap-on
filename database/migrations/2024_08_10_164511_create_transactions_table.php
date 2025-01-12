@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
@@ -20,16 +17,14 @@ return new class extends Migration
             $table->foreignId('booking_id');
             $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
             $table->decimal('total', 20)->nullable();
-            $table->string('status', 10);
-            $table->string('payment_url', 255);
+            $table->string('status', 10)->default('pending'); // Default status
+            $table->string('payment_url', 255)->nullable(); // Bisa diisi dengan URL pembayaran jika ada
+            $table->decimal('tax_percentage', 5, 2)->default(11); // Menambahkan nilai default
             $table->timestamps();
             $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('transactions');

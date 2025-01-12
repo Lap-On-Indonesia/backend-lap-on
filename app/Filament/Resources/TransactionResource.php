@@ -55,10 +55,15 @@ class TransactionResource extends Resource
                     ->minValue(0)
                     ->step(0.01)
                     ->required(),
-                TextInput::make('status')
+                Select::make('status')
                     ->label('Status')
-                    ->required()
-                    ->maxLength(10),
+                    ->options([
+                        'pending' => 'Pending',
+                        'accept' => 'Accept',
+                        'reject' => 'Reject',
+                    ])
+                    ->default('pending')
+                    ->required(),
                 TextInput::make('payment_url')
                     ->label('Payment URL')
                     ->required()
