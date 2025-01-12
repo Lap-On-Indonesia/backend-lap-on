@@ -29,6 +29,8 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'owner_id',
+        'owner_marketplace_id',
     ];
 
     /**

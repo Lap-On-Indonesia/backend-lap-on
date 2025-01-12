@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Owner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,6 +31,8 @@ class RegisterOwnerController extends Controller
             'photo_store' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk photo_store
             'password' => 'required|string|min:8|confirmed',
         ]);
+
+        DB::beginTransaction();
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -64,7 +67,10 @@ class RegisterOwnerController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'owner_id' => $owner->id
         ]);
+
+        DB::commit();
 
         // Redirect ke halaman status dengan pesan sukses
         return view('status.index')->with('success', 'Registrasi berhasil!');

@@ -191,4 +191,15 @@ class OwnerMarketplaceResource extends Resource
             'edit' => Pages\EditOwnerMarketplace::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        // Jika user adalah super_admin, tampilkan semua data tanpa filter
+        if (auth()->check() && auth()->user()->hasRole('super_admin')) {
+            return parent::getEloquentQuery();
+        }
+
+        // Jika bukan super_admin, tampilkan hanya data author yang sesuai dengan user yang login
+        return parent::getEloquentQuery()->where('id', auth()->user()->owner_marketplace_id);
+    }
 }
