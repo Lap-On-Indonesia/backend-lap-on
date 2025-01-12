@@ -187,7 +187,7 @@ class VenueResource extends Resource
             return parent::getEloquentQuery();
         }
 
-        if (auth()->check() && !empty(auth()->user()->owner_ud)) {
+        if (auth()->check() && !empty(auth()->user()->owner_id)) {
             return parent::getEloquentQuery()->where('owner_id', auth()->user()->owner_id);
         }
 

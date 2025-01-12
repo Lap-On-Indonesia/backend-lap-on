@@ -11,10 +11,10 @@ class CreateVenue extends CreateRecord
     protected static string $resource = VenueResource::class;
 
     public function beforeSave()
-{
-    if (auth()->user()->role !== 'super_admin') {
-        $this->data['owner_id'] = auth()->user()->owner_id;
+    {
+        if (auth()->user()->hasRole('super_admin')) {
+            $this->data['owner_id'] = auth()->user()->owner_id;
+        }
     }
-}
 
 }

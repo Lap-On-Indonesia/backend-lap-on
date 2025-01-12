@@ -16,6 +16,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class ProductResource extends Resource
 {
@@ -35,10 +37,16 @@ class ProductResource extends Resource
                 TextInput::make('name_product')
                     ->label('Nama Produk')
                     ->required(),
-                Select::make('owner_marketplace_id')
-                    ->label('Owner Marketplace')
-                    ->options(OwnerMarketplace::all()->pluck('name', 'id'))
-                    ->required(),
+                auth()->user()->hasRole('super_admin')
+                    ? Select::make('owner_id')
+                        ->label('Owner')
+                        ->options(OwnerMarketplace::query()->pluck('name', 'id'))
+                        ->searchable()
+                        ->required()
+                    : TextInput::make('owner_name')
+                        ->label('Owner Name')
+                        ->disabled()
+                        ->default(fn () => OwnerMarketplace::find(auth()->user()->owner_marketplace_id)?->name ?? 'N/A'),
                 Select::make('category_marketplace_id')
                     ->label('Category Marketplace')
                     ->options(CategoryMarketplace::all()->pluck('name', 'id'))
@@ -119,5 +127,19 @@ class ProductResource extends Resource
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if (auth()->check() && auth()->user()->hasRole('super_admin')) {
+            return parent::getEloquentQuery();
+        }
+
+        if (auth()->check() && !empty(auth()->user()->owner_marketplace_id)) {
+            return parent::getEloquentQuery()->where('owner_marketplace_id', auth()->user()->owner_marketplace_id);
+        }
+
+        // Default: Jika tidak memenuhi syarat, kembalikan query kosong
+        return parent::getEloquentQuery()->whereRaw('1 = 0');
     }
 }
