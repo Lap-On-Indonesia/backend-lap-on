@@ -8,9 +8,9 @@
 </head>
 
 <body>
-    <h1>Status Marketplace Diperbarui</h1>
+    <h1>Status Penjualan Diperbarui</h1>
     <p>Halo, {{ $ownerMarketplace->name ?? 'Pemilik Marketplace' }},</p>
-    <p>Status akun marketplace Anda telah diperbarui menjadi:
+    <p>Status akun penjualan Anda telah diperbarui menjadi:
         <strong>{{ $ownerMarketplace->status ?? 'Diterima' }}</strong>.
     </p>
 

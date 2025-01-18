@@ -31,6 +31,21 @@ class CategoryMarketplaceResource extends Resource
         return 'Category Product';
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'Category Product';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Category Products';
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return 'Category Product';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
