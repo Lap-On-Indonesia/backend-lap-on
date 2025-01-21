@@ -57,15 +57,15 @@ class BookingController extends Controller
             $booking = Booking::create($data);
 
             // Membuat Transaction secara otomatis
-            Transaction::create([
-                'user_id' => $userId,
-                'venue_id' => $request->venue_id,
-                'booking_id' => $booking->id, // Gunakan $booking->id bukan $booking->booking_id
-                'total' => $booking->total_payment,
-                'status' => 'pending', // Default status
-                'payment_url' => '', // Bisa diisi dengan URL pembayaran jika ada
-                'tax_percentage' => $taxPercentage, // Pastikan tax_percentage diisi
-            ]);
+            // Transaction::create([
+            //     'user_id' => $userId,
+            //     'venue_id' => $request->venue_id,
+            //     'booking_id' => $booking->id, // Gunakan $booking->id bukan $booking->booking_id
+            //     'total' => $booking->total_payment,
+            //     'status' => 'pending', // Default status
+            //     'payment_url' => '', // Bisa diisi dengan URL pembayaran jika ada
+            //     'tax_percentage' => $taxPercentage, // Pastikan tax_percentage diisi
+            // ]);
 
             return ResponseFormatter::success($booking, 'Booking created successfully', 201);
         } catch (\Exception $e) {

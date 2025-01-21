@@ -19,6 +19,7 @@ class Product extends Model
         'name_product',
         'category_marketplace_id',
         'description',
+        'owner_marketplace_id',
         'price',
         'image',
         'stock', // Menambahkan field stock ke sini
@@ -31,6 +32,10 @@ class Product extends Model
         static::creating(function ($product) {
             if (empty($product->product_id)) {
                 $product->product_id = self::generateProductId();
+            }
+
+            if (empty($product->owner_marketplace_id)) {
+                $product->owner_marketplace_id = auth()->user()->owner_marketplace_id;
             }
         });
     }
@@ -58,4 +63,6 @@ class Product extends Model
     {
         return $this->hasMany(TransactionMarketplace::class);
     }
+
+    
 }
