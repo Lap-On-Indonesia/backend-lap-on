@@ -22,70 +22,12 @@ class VenueController extends Controller
         return ResponseFormatter::success($venues, 'Venues retrieved successfully');
     }
 
-    public function store(Request $request)
-    {
-        // Validasi data
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'owner_id' => 'required|exists:users,id',
-            'link_maps' => 'required|string|max:255',
-            'latitude' => 'required|numeric|between:-90,90', // Validasi latitude
-            'longitude' => 'required|numeric|between:-180,180', // Validasi longitude
-            'price' => 'required|numeric|min:0', // Validasi untuk harga
-        ]);
-
-        // Simpan data venue
-        $venue = Venue::create($request->all());
-
-        return ResponseFormatter::success($venue, 'Venue created successfully', 201);
-    }
-
     public function show($id)
     {
         try {
             $venue = Venue::with('owner', 'category', 'schedule')->findOrFail($id);
 
             return ResponseFormatter::success($venue, 'Venue retrieved successfully');
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return ResponseFormatter::error(null, 'Venue not found', 404);
-        }
-    }
-
-    public function update(Request $request, $id)
-    {
-        // Validasi data
-        $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string',
-            'category_id' => 'sometimes|exists:categories,id',
-            'owner_id' => 'sometimes|exists:users,id',
-            'link_maps' => 'sometimes|string|max:255',
-            'latitude' => 'sometimes|numeric|between:-90,90', // Validasi latitude
-            'longitude' => 'sometimes|numeric|between:-180,180', // Validasi longitude
-            'price' => 'sometimes|numeric|min:0', // Validasi untuk harga
-        ]);
-
-        try {
-            // Cari venue dan update data
-            $venue = Venue::findOrFail($id);
-            $venue->update($request->all());
-
-            return ResponseFormatter::success($venue, 'Venue updated successfully');
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return ResponseFormatter::error(null, 'Venue not found', 404);
-        }
-    }
-
-    public function destroy($id)
-    {
-        try {
-            // Cari venue dan hapus
-            $venue = Venue::findOrFail($id);
-            $venue->delete();
-
-            return ResponseFormatter::success(null, 'Venue deleted successfully', 204);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return ResponseFormatter::error(null, 'Venue not found', 404);
         }

@@ -16,6 +16,6 @@ class PaymentController extends Controller
         ];
 
         // Mengirim data ke view
-        return view('user.payment_success', $data);
+        return view('payment.payment_success', $data);
     }
 }

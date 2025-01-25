@@ -6,11 +6,12 @@ use Midtrans\Snap;
 use Midtrans\Config;
 use App\Models\Booking;
 use App\Models\Transaction;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Helpers\ResponseFormatter;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -22,6 +23,7 @@ class CheckoutController extends Controller
 
         // Set Midtrans configuration
         Config::$serverKey    = config('services.midtrans.serverKey');
+        Config::$clientKey    = config('services.midtrans.clientKey');
         Config::$isProduction = config('services.midtrans.isProduction');
         Config::$isSanitized  = config('services.midtrans.isSanitized');
         Config::$is3ds        = config('services.midtrans.is3ds');
@@ -90,11 +92,12 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Transaction created successfully',
-                'payment_url' => $paymentUrl
-            ]);
+            // return response()->json([
+            //     'code' => 200,
+            //     'message' => 'Transaction created successfully',
+            //     'payment_url' => $paymentUrl
+            // ]);
+            return ResponseFormatter::success($transaction, 'Categories retrieved successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

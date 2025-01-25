@@ -30,16 +30,34 @@ class BookingController extends Controller
                 'booking_date' => 'required|date',
                 'start_time' => 'required|date_format:H:i',
                 'end_time' => 'required|date_format:H:i|after:start_time',
-                'tax_percentage' => 'nullable|numeric', // Ubah menjadi nullable
+                'tax_percentage' => 'nullable|numeric',
                 'total_payment' => 'nullable|numeric',
             ]);
 
             $venue = Venue::find($request->venue_id);
             $startTime = Carbon::parse($request->start_time);
             $endTime = Carbon::parse($request->end_time);
+
+            // Cek apakah slot waktu sudah dipesan
+            $isBooked = Booking::where('venue_id', $request->venue_id)
+                ->where('booking_date', $request->booking_date)
+                ->where(function ($query) use ($startTime, $endTime) {
+                    $query->whereBetween('start_time', [$startTime, $endTime])
+                        ->orWhereBetween('end_time', [$startTime, $endTime])
+                        ->orWhere(function ($query) use ($startTime, $endTime) {
+                            $query->where('start_time', '<', $startTime)
+                                    ->where('end_time', '>', $endTime);
+                        });
+                })
+                ->exists();
+
+            if ($isBooked) {
+                return ResponseFormatter::error(null, 'The selected time slot is already booked', 422);
+            }
+
             $durationInHours = $endTime->diffInHours($startTime);
             $pricePerHour = $venue->price;
-            $taxPercentage = $request->tax_percentage ?? 11; // Ambil dari request atau set default
+            $taxPercentage = $request->tax_percentage ?? 11;
 
             $totalPayment = $durationInHours * $pricePerHour;
             $taxAmount = $totalPayment * ($taxPercentage / 100);
@@ -56,22 +74,12 @@ class BookingController extends Controller
 
             $booking = Booking::create($data);
 
-            // Membuat Transaction secara otomatis
-            // Transaction::create([
-            //     'user_id' => $userId,
-            //     'venue_id' => $request->venue_id,
-            //     'booking_id' => $booking->id, // Gunakan $booking->id bukan $booking->booking_id
-            //     'total' => $booking->total_payment,
-            //     'status' => 'pending', // Default status
-            //     'payment_url' => '', // Bisa diisi dengan URL pembayaran jika ada
-            //     'tax_percentage' => $taxPercentage, // Pastikan tax_percentage diisi
-            // ]);
-
             return ResponseFormatter::success($booking, 'Booking created successfully', 201);
         } catch (\Exception $e) {
             return ResponseFormatter::error(null, 'Failed to create booking: ' . $e->getMessage(), 500);
         }
     }
+
 
     public function show($id)
     {
