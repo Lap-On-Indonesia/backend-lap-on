@@ -70,10 +70,10 @@ class VenueResource extends Resource
                     ->image()
                     ->required(),
 
-                TextInput::make('link_maps')
-                    ->label('Google Maps Link')
-                    ->maxLength(255)
-                    ->required(),
+                // TextInput::make('link_maps')
+                //     ->label('Google Maps Link')
+                //     ->maxLength(255)
+                //     ->required(),
 
                 TextInput::make('latitude')
                     ->label('Latitude')

@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\DeleteAction;
 
 class BookingResource extends Resource
 {
@@ -176,7 +177,7 @@ protected static function calculateTotalPayment(callable $get, callable $set)
                 //
             ])
             ->actions([
-                // Hapus aksi edit dan delete
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 // Hilangkan kemampuan bulk delete atau aksi lainnya
