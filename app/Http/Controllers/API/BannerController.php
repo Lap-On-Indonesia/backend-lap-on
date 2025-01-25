@@ -13,15 +13,21 @@ class BannerController extends Controller
     {
         $request->validate([
             'title' => 'nullable|string|max:255',
-            'image_url' => 'required|image', // Validasi file gambar
+            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi file gambar
             'link_url' => 'nullable|string|max:255',
         ]);
 
-        $path = $request->file('image_url')->store('uploads/banners', 'public/images'); // Upload file
+        // Mengunggah gambar dan mendapatkan pathnya
+        if ($request->hasFile('image_url')) {
+            $path = $request->file('image_url')->store('banner', 'public');
+        } else {
+            $path = null;
+        }
 
+        // Membuat banner baru
         $banner = Banner::create([
             'title' => $request->title,
-            'image_url' => $path, // Simpan path file
+            'image_url' => $path,
             'link_url' => $request->link_url,
         ]);
 

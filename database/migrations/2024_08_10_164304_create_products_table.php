@@ -23,6 +23,14 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // Menambahkan kolom owner_marketplace_id jika belum ada
+        Schema::table('products', function (Blueprint $table) {
+            if (!Schema::hasColumn('products', 'owner_marketplace_id')) {
+                $table->foreignId('owner_marketplace_id')->nullable();
+                $table->foreign('owner_marketplace_id')->references('id')->on('owner_marketplaces')->onDelete('cascade');
+            }
+        });
     }
 
     /**
@@ -30,6 +38,13 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('products', function (Blueprint $table) {
+            if (Schema::hasColumn('products', 'owner_marketplace_id')) {
+                $table->dropForeign(['owner_marketplace_id']);
+                $table->dropColumn('owner_marketplace_id');
+            }
+        });
+
         Schema::dropIfExists('products');
     }
 };
