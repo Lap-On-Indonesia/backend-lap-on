@@ -37,14 +37,13 @@ class ProductResource extends Resource
                 TextInput::make('name_product')
                     ->label('Nama Produk')
                     ->required(),
-                    Select::make('owner_marketplace_id')
+                Select::make('owner_marketplace_id')
                     ->label('Owner')
                     ->options(OwnerMarketplace::query()->pluck('name', 'id'))
                     ->searchable()
                     ->required()
                     ->default(fn () => auth()->user()->hasRole('super_admin') ? null : auth()->user()->owner_marketplace_id)
                     ->disabled(fn () => !auth()->user()->hasRole('super_admin')),
-                
                 Select::make('category_marketplace_id')
                     ->label('Category Marketplace')
                     ->options(CategoryMarketplace::all()->pluck('name', 'id'))

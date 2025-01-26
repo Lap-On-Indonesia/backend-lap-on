@@ -111,7 +111,7 @@ class OwnerResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                ImageColumn::make('photo_store'),
+                ImageColumn::make('photo_lapangan'),
 
                 ImageColumn::make('photo_profile'),
 
