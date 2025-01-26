@@ -19,6 +19,7 @@ class AuthController extends BaseController
     public function login(Request $request)
     {
         try {
+            // dd($request);
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
                 'password' => 'required',

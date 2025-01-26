@@ -15,6 +15,8 @@ class TransactionMarketplace extends Model
         'total',
         'status',
         'payment_url',
+        'transaction_id',
+
     ];
 
     public function user()

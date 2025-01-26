@@ -13,6 +13,7 @@ class Transaction extends Model
         'user_id',
         'venue_id',
         'booking_id',
+        'transaction_id',
         'total',
         'status',
         'payment_url',

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Midtrans\Config;
 use Midtrans\Snap;
+use App\Helpers\ResponseFormatter;
+
 
 class MarketplaceCheckoutController extends Controller
 {
@@ -85,17 +87,20 @@ class MarketplaceCheckoutController extends Controller
             $paymentUrl = $baseSnapUrl . $snapToken;
 
             // Save snap token and payment URL in the transaction
+
             $transaction->update([
                 'payment_url' => $paymentUrl,
             ]);
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Transaction created successfully',
-                'payment_url' => $paymentUrl
-            ]);
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Transaction created successfully',
+            //     'payment_url' => $paymentUrl
+            // ]);
+            return ResponseFormatter::success($transaction, 'Transaction successfully');
+
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -106,52 +111,5 @@ class MarketplaceCheckoutController extends Controller
         }
     }
 
-    public function notificationHandler(Request $request)
-    {
-        $payload      = $request->getContent();
-        $notification = json_decode($payload);
-
-        $validSignatureKey = hash("sha512", $notification->order_id . $notification->status_code . $notification->gross_amount . config('services.midtrans.serverKey'));
-
-        if ($notification->signature_key != $validSignatureKey) {
-            return response(['message' => 'Invalid signature'], 403);
-        }
-
-        $transactionStatus = $notification->transaction_status;
-        $orderId           = $notification->order_id;
-        $paymentType       = $notification->payment_type;
-        $fraudStatus       = $notification->fraud_status;
-
-        // Find the transaction
-        $transaction = TransactionMarketplace::where('transaction_id', $orderId)->first();
-
-        if (!$transaction) {
-            return response(['message' => 'Transaction not found'], 404);
-        }
-
-        // Update transaction status based on Midtrans notification
-        if ($transactionStatus == 'capture') {
-            if ($paymentType == 'credit_card') {
-                if ($fraudStatus == 'challenge') {
-                    $transaction->status = 'pending';
-                } else {
-                    $transaction->status = 'success';
-                }
-            }
-        } elseif ($transactionStatus == 'settlement') {
-            $transaction->status = 'success';
-        } elseif ($transactionStatus == 'pending') {
-            $transaction->status = 'pending';
-        } elseif ($transactionStatus == 'deny') {
-            $transaction->status = 'failed';
-        } elseif ($transactionStatus == 'expire') {
-            $transaction->status = 'expired';
-        } elseif ($transactionStatus == 'cancel') {
-            $transaction->status = 'failed';
-        }
-
-        $transaction->save();
-
-        return response()->json(['message' => 'Notification processed successfully.']);
-    }
+    
 }

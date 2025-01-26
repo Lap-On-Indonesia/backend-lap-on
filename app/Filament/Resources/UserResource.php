@@ -48,7 +48,7 @@ class UserResource extends Resource
                     ->label('Password')
                     ->required()
                     ->password()
-                    ->visibleOn('create'),
+                    // ->visibleOn('create'),
             ]);
     }
 

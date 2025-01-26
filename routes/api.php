@@ -58,8 +58,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('transaction-marketplaces', [TransactionMarketplaceController::class, 'index']);
     Route::get('transaction-marketplaces/{id}', [TransactionMarketplaceController::class, 'show']);
     Route::post('transaction-marketplaces', [TransactionMarketplaceController::class, 'store']);
-    Route::put('transaction-marketplaces/{id}', [TransactionMarketplaceController::class, 'update']);
-    Route::delete('transaction-marketplaces/{id}', [TransactionMarketplaceController::class, 'destroy']);
 
     Route::post('bookings', [BookingController::class, 'store']);
     Route::get('bookings', [BookingController::class, 'index']);
@@ -98,9 +96,6 @@ Route::delete('notifications/{id}', [NotificationController::class, 'destroy']);
 
 Route::get('products', [ProductController::class, 'index']);
 Route::get('products/{id}', [ProductController::class, 'show']);
-Route::post('products', [ProductController::class, 'store']);
-Route::put('products/{id}', [ProductController::class, 'update']);
-Route::delete('products/{id}', [ProductController::class, 'destroy']);
 Route::get('product/category/{category_marketplace_id}', [ProductController::class, 'showbyCategoryId']);
 
 
@@ -111,3 +106,5 @@ Route::put('category-marketplaces/{id}', [CategoryMarketplaceController::class, 
 Route::delete('category-marketplaces/{id}', [CategoryMarketplaceController::class, 'destroy']);
 
 Route::get('/venues/{venue}/schedules', [ScheduleController::class, 'getAvailableSchedules']);
+
+Route::post('/midtrans/notification', [CheckoutController::class, 'notificationHandler']);
