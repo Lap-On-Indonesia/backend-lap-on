@@ -24,7 +24,6 @@ class ScheduleController extends Controller
                 ->where('is_available', true)
                 ->get();
 
-
             // Ambil booking untuk venue tersebut pada tanggal yang dipilih
             $bookedSlots = Booking::where('venue_id', $venue->id)
                 ->where('booking_date', $request->input('date'))
@@ -41,6 +40,9 @@ class ScheduleController extends Controller
                 return $schedule;
             });
 
+            // Hitung jumlah jadwal yang tersedia
+            $availableSchedulesCount = $schedules->where('is_booked', false)->count();
+
             // Menyertakan informasi venue bersama dengan jadwal yang tersedia
             $response = [
                 'venue' => [
@@ -55,11 +57,12 @@ class ScheduleController extends Controller
                     'closing_time' => $venue->closing_time,
                 ],
                 'schedules' => $schedules,
+                'available_schedules_count' => $availableSchedulesCount, // Menambahkan jumlah jadwal yang tersedia
             ];
 
-            return ResponseFormatter::success($response, 'Schedules retrieved successfully');
+            return ResponseFormatter::success($response, 'Jadwal berhasil diambil');
         } catch (\Exception $e) {
-            return ResponseFormatter::error(null, 'Failed to retrieve schedules: ' . $e->getMessage(), 500);
+            return ResponseFormatter::error(null, 'Gagal mengambil jadwal: ' . $e->getMessage(), 500);
         }
     }
 }

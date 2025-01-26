@@ -10,70 +10,7 @@ use App\Models\CategoryMarketplace;
 
 class ProductController extends Controller
 {
-    // Menambahkan produk baru
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name_product' => 'required|string|max:255',
-            'category_marketplace_id' => 'required|exists:category_marketplaces,id',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'stock' => 'required|integer|min:0',
-        ]);
-
-        $imagePath = $request->file('image')->store('product', 'public');
-
-        $product = Product::create([
-            'name_product' => $request->name_product,
-            'category_marketplace_id' => $request->category_marketplace_id,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image' => $imagePath,
-            'stock' => $request->stock,
-        ]);
-
-        return ResponseFormatter::success($product, 'Product created successfully', 201);
-    }
-
-    // Memperbarui produk
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name_product' => 'required|string|max:255',
-            'category_marketplace_id' => 'required|exists:category_marketplaces,id',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'stock' => 'required|integer|min:0',
-        ]);
-
-        $product = Product::findOrFail($id);
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('product', 'public');
-            $product->image = $imagePath;
-        }
-
-        $product->update([
-            'name_product' => $request->name_product,
-            'category_marketplace_id' => $request->category_marketplace_id,
-            'description' => $request->description,
-            'price' => $request->price,
-            'stock' => $request->stock,
-        ]);
-
-        return ResponseFormatter::success($product, 'Product updated successfully');
-    }
-
-    // Menghapus produk
-    public function destroy($id)
-    {
-        $product = Product::findOrFail($id);
-        $product->delete();
-
-        return ResponseFormatter::success(null, 'Product deleted successfully');
-    }
+    
 
     // Mendapatkan daftar produk
     public function index()

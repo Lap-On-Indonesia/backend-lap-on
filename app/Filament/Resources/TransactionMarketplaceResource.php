@@ -63,6 +63,10 @@ class TransactionMarketplaceResource extends Resource
                     ->label('User')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('transaction_id') // Mengakses nama produk
+                    ->label('Transaction ID')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('product.name_product') // Mengakses nama produk
                     ->label('Product')
                     ->searchable()
