@@ -12,7 +12,7 @@ class TransactionMarketplaceController extends Controller
 {
     public function index()
     {
-        $transactions = TransactionMarketplace::all();
+        $transactions = TransactionMarketplace::where('user_id', Auth::id())->with(['user', 'product'])->get();
         return ResponseFormatter::success($transactions, 'Transactions retrieved successfully');
     }
 

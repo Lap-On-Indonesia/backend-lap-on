@@ -29,7 +29,7 @@ class TransactionResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Transaction Menu';
+        return 'Status Booking';
     }
 
     public static function canCreate(): bool

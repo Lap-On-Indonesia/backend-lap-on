@@ -13,56 +13,69 @@ use Illuminate\Http\Request;
 class ScheduleController extends Controller
 {
     public function getAvailableSchedules(Venue $venue, Request $request)
-    {
-        try {
-            // Konversi tanggal ke instance Carbon dan dapatkan hari dalam seminggu
-            $dayOfWeek = Carbon::parse($request->input('date'))->format('l'); // Contoh output: 'Monday'
+{
+    try {
+        // Konversi tanggal ke instance Carbon dan dapatkan hari dalam seminggu
+        $dayOfWeek = Carbon::parse($request->input('date'), 'Asia/Jakarta')->format('l'); // Contoh output: 'Monday'
+        $currentTime = Carbon::now('Asia/Jakarta'); // Waktu sekarang
 
-            // Ambil semua jadwal yang tersedia pada hari tersebut untuk venue yang dipilih
-            $schedules = Schedule::where('venue_id', $venue->id)
-                ->whereJsonContains('day_of_week', strtolower($dayOfWeek)) // Gunakan whereJsonContains untuk array
-                ->where('is_available', true)
-                ->get();
+        // Ambil semua jadwal yang tersedia pada hari tersebut untuk venue yang dipilih
+        $schedules = Schedule::where('venue_id', $venue->id)
+            ->whereJsonContains('day_of_week', strtolower($dayOfWeek)) // Gunakan whereJsonContains untuk array
+            ->where('is_available', true)
+            ->get();
 
-            // Ambil booking untuk venue tersebut pada tanggal yang dipilih
-            $bookedSlots = Booking::where('venue_id', $venue->id)
-                ->where('booking_date', $request->input('date'))
-                ->get();
+        // Ambil booking untuk venue tersebut pada tanggal yang dipilih
+        $bookedSlots = Booking::where('venue_id', $venue->id)
+            ->where('booking_date', $request->input('date'))
+            ->get();
 
-            // Loop melalui jadwal dan cek apakah ada yang sudah di-booking
-            $schedules = $schedules->map(function ($schedule) use ($bookedSlots) {
-                $isBooked = $bookedSlots->some(function ($booking) use ($schedule) {
-                    return $booking->start_time < $schedule->end_time && $booking->end_time > $schedule->start_time;
-                });
-
-                $schedule->is_booked = $isBooked;
-
-                return $schedule;
+        // Loop melalui jadwal dan cek apakah ada yang sudah di-booking atau telah lewat
+        $schedules = $schedules->map(function ($schedule) use ($bookedSlots, $request, $currentTime) {
+            $isBooked = $bookedSlots->some(function ($booking) use ($schedule) {
+                return $booking->start_time < $schedule->end_time && $booking->end_time > $schedule->start_time;
             });
 
-            // Hitung jumlah jadwal yang tersedia
-            $availableSchedulesCount = $schedules->where('is_booked', false)->count();
+            // Pastikan format waktu `start_time` digabung dengan tanggal dan dibandingkan dengan waktu saat ini
+            $scheduleStartTime = Carbon::createFromFormat(
+                'Y-m-d H:i:s',
+                $request->input('date') . ' ' . $schedule->start_time,
+                'Asia/Jakarta'
+            );
 
-            // Menyertakan informasi venue bersama dengan jadwal yang tersedia
-            $response = [
-                'venue' => [
-                    'id' => $venue->id,
-                    'name' => $venue->name,
-                    'image' => $venue->image,
-                    'address' => $venue->address,
-                    'description' => $venue->description,
-                    'price' => $venue->price,
-                    'category_id' => $venue->category_id,
-                    'opening_time' => $venue->opening_time,
-                    'closing_time' => $venue->closing_time,
-                ],
-                'schedules' => $schedules,
-                'available_schedules_count' => $availableSchedulesCount, // Menambahkan jumlah jadwal yang tersedia
-            ];
+            $isPast = $scheduleStartTime->lt($currentTime); // Cek apakah jadwal telah lewat
 
-            return ResponseFormatter::success($response, 'Jadwal berhasil diambil');
-        } catch (\Exception $e) {
-            return ResponseFormatter::error(null, 'Gagal mengambil jadwal: ' . $e->getMessage(), 500);
-        }
+            $schedule->is_booked = $isBooked;
+            $schedule->is_past = $isPast; // Tambahkan status apakah jadwal sudah lewat
+
+            return $schedule;
+        });
+
+        // Hitung jumlah jadwal yang tersedia
+        $availableSchedulesCount = $schedules->where('is_booked', false)->where('is_past', false)->count();
+
+        // Menyertakan informasi venue bersama dengan jadwal yang tersedia
+        $response = [
+            'venue' => [
+                'id' => $venue->id,
+                'name' => $venue->name,
+                'image' => $venue->image,
+                'address' => $venue->address,
+                'description' => $venue->description,
+                'price' => $venue->price,
+                'category_id' => $venue->category_id,
+                'opening_time' => $venue->opening_time,
+                'closing_time' => $venue->closing_time,
+            ],
+            'schedules' => $schedules,
+            'available_schedules_count' => $availableSchedulesCount, // Menambahkan jumlah jadwal yang tersedia
+        ];
+
+        return ResponseFormatter::success($response, 'Jadwal berhasil diambil');
+    } catch (\Exception $e) {
+        return ResponseFormatter::error(null, 'Gagal mengambil jadwal: ' . $e->getMessage(), 500);
     }
+}
+
+
 }

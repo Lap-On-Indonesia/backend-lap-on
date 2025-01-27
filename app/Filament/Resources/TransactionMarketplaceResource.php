@@ -28,6 +28,11 @@ class TransactionMarketplaceResource extends Resource
         return 'Admin Management';
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Status Product';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

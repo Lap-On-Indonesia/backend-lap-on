@@ -167,11 +167,12 @@ protected static function calculateTotalPayment(callable $get, callable $set)
                     ->label('Venue')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('booking_date'),
+                TextColumn::make('booking_date')->sortable(),
                 TextColumn::make('start_time'),
                 TextColumn::make('end_time'),
                 TextColumn::make('total_payment')
                     ->money('IDR'),
+                TextColumn::make('created_at')->sortable(),
             ])
             ->filters([
                 //

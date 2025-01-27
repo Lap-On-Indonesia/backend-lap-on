@@ -52,7 +52,7 @@ class BookingController extends Controller
             ->exists();
 
         if ($isBooked) {
-            return ResponseFormatter::error(null, 'The selected time slot is already booked', 422);
+            return ResponseFormatter::error(null, 'Jadwal yang kamu pilih sudah dibooking, Silakan pilih jadwal lain', 422);
         }
 
         $durationInHours = $endTime->diffInHours($startTime);
