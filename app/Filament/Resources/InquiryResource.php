@@ -24,7 +24,7 @@ class InquiryResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Admin Management';
+        return 'Company Profile';
     }
 
     public static function form(Form $form): Form
