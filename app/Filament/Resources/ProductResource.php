@@ -38,7 +38,7 @@ class ProductResource extends Resource
                     ->label('Nama Produk')
                     ->required(),
                 Select::make('owner_marketplace_id')
-                    ->label('Owner')
+                    ->label('Seller')
                     ->options(OwnerMarketplace::query()->pluck('name', 'id'))
                     ->searchable()
                     ->required()
