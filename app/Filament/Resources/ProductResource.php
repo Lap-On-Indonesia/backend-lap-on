@@ -45,7 +45,7 @@ class ProductResource extends Resource
                     ->default(fn () => auth()->user()->hasRole('super_admin') ? null : auth()->user()->owner_marketplace_id)
                     ->disabled(fn () => !auth()->user()->hasRole('super_admin')),
                 Select::make('category_marketplace_id')
-                    ->label('Category Marketplace')
+                    ->label('Category Product')
                     ->options(CategoryMarketplace::all()->pluck('name', 'id'))
                     ->required(),
                 TextInput::make('description')
@@ -82,7 +82,7 @@ class ProductResource extends Resource
                 TextColumn::make('name_product')
                     ->label('Nama Produk'),
                 TextColumn::make('categoryMarketplace.name')
-                    ->label('Category Marketplace')
+                    ->label('Category Product')
                     ->searchable()
                     ->sortable(),
                 ImageColumn::make('image')
