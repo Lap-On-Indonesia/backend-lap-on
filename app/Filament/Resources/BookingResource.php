@@ -19,6 +19,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\DeleteAction;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class BookingResource extends Resource
 {
@@ -192,5 +194,20 @@ protected static function calculateTotalPayment(callable $get, callable $set)
             'create' => Pages\CreateBooking::route('/create'),
             'edit' => Pages\EditBooking::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Cek apakah pengguna adalah super admin
+        if (Auth::user()->hasRole('super_admin')) {
+            return $query;
+        }
+
+        // Jika bukan super admin, filter booking berdasarkan venue yang dimiliki oleh owner
+        return $query->whereHas('venue', function (Builder $venueQuery) {
+            $venueQuery->where('owner_id', Auth::user()->owner_id);
+        });
     }
 }
