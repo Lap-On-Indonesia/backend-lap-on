@@ -71,6 +71,9 @@
                                     <li class="nav-item">
                                         <a class="" href="#contact">Contact</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="" href="#download">Download</a>
+                                    </li>
                                 </ul>
                             </div>
                         </nav>
