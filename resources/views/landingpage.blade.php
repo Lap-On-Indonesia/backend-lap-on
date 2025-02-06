@@ -772,7 +772,7 @@
     <!-- End Contact Section -->
 
     <!-- ====== Footer Start ====== -->
-    <footer class="footer wow fadeInUp" data-wow-delay=".15s">
+    <footer id="footer" class="footer wow fadeInUp" data-wow-delay=".15s">
         <div class="footer-widgets">
             <div class="container">
                 <div class="row">
@@ -829,6 +829,9 @@
                                 <li>
                                     <a href="#team">Team</a>
                                 </li>
+                                <li>
+                                    <a href="https://doorprize-admin.my.id" target="_system">Kembali ke Aplikasi Shamo</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -876,6 +879,16 @@
         </div>
     </footer>
     <!-- ====== Footer End ====== -->
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (window.location.hash === "#footer") {
+            document.getElementById("footer").scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+    });
+</script>
 
     <!-- ====== Back To Top Start ====== -->
     {{-- <a href="javascript:void(0)" class="back-to-top">

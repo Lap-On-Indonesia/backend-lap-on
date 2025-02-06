@@ -55,3 +55,7 @@ Route::post('/register-owner-marketplace', [RegisterOwnerMarketplaceController::
 // Route::get('/kpr/form', function () {
 //     return view('kpr.form');
 // })->name('kpr.form');
+
+Route::get('/success-payment', function() {
+    return view('success-payment');
+});
