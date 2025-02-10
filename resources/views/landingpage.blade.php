@@ -71,9 +71,9 @@
                                     <li class="nav-item">
                                         <a class="" href="#contact">Contact</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="" href="#download">Download</a>
-                                    </li>
+                                    @foreach($links as $link)
+                                        <li class="nav-item"><a href="{{ $link->link }}" target="_blank">Download</a></li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </nav>
