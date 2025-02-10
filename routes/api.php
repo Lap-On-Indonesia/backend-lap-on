@@ -20,6 +20,7 @@ use App\Http\Controllers\API\PropertyController;
 use App\Http\Controllers\API\ResetPasswordController;
 use App\Http\Controllers\API\ScheduleController;
 use App\Http\Controllers\API\TransactionController;
+use App\Http\Controllers\API\RefundController;
 use App\Http\Controllers\API\TransactionMarketplaceController;
 use App\Http\Controllers\API\VenueController;
 use App\Http\Controllers\Auth\RegisterOwnerMarketplaceController;
@@ -64,6 +65,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('bookings/{id}', [BookingController::class, 'show']);
     Route::put('bookings/{id}', [BookingController::class, 'update']);
     Route::delete('bookings/{id}', [BookingController::class, 'destroy']);
+
+    Route::post('/bookings/{bookingId}/refund', [RefundController::class, 'requestRefund']);
 
     Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('checkout-marketplace', [MarketplaceCheckoutController::class, 'store'])->name('checkout.store');
