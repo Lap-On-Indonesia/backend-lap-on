@@ -72,7 +72,8 @@
                                         <a class="" href="#contact">Contact</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="" href="#download">Download</a>
+                                        <a class=""
+                                            href="https://drive.google.com/drive/folders/1che9ap7cNVGCohuhpy9huFpD6k0oELJR">Download</a>
                                     </li>
                                 </ul>
                             </div>
