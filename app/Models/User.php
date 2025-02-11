@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(OwnerMarketplace::class);
     }
+
+    public function venues()
+{
+    return $this->hasMany(Venue::class, 'owner_id');
+}
 }
