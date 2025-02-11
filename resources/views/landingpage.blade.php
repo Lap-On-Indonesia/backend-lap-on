@@ -71,10 +71,16 @@
                                     <li class="nav-item">
                                         <a class="" href="#contact">Contact</a>
                                     </li>
+<<<<<<< HEAD
                                     <li class="nav-item">
                                         <a class=""
                                             href="https://drive.google.com/drive/folders/1che9ap7cNVGCohuhpy9huFpD6k0oELJR">Download</a>
                                     </li>
+=======
+                                    @foreach($links as $link)
+                                        <li class="nav-item"><a href="{{ $link->link }}" target="_blank">Download</a></li>
+                                    @endforeach
+>>>>>>> 5d1edfe4b945f0a07eedf99493302f0c8c65bef1
                                 </ul>
                             </div>
                         </nav>
@@ -773,7 +779,7 @@
     <!-- End Contact Section -->
 
     <!-- ====== Footer Start ====== -->
-    <footer class="footer wow fadeInUp" data-wow-delay=".15s">
+    <footer id="footer" class="footer wow fadeInUp" data-wow-delay=".15s">
         <div class="footer-widgets">
             <div class="container">
                 <div class="row">
@@ -830,6 +836,9 @@
                                 <li>
                                     <a href="#team">Team</a>
                                 </li>
+                                <li>
+                                    <a href="https://doorprize-admin.my.id" target="_system">Kembali ke Aplikasi Shamo</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -877,6 +886,16 @@
         </div>
     </footer>
     <!-- ====== Footer End ====== -->
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (window.location.hash === "#footer") {
+            document.getElementById("footer").scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+    });
+</script>
 
     <!-- ====== Back To Top Start ====== -->
     {{-- <a href="javascript:void(0)" class="back-to-top">

@@ -37,10 +37,14 @@ class RefundResource extends Resource
                 DateTimePicker::make('refund_date_time')
                     ->label('Refund Date and Time')
                     ->required(),
-                TextInput::make('status')
+                Select::make('status')
                     ->label('Status')
-                    ->required()
-                    ->maxLength(255),
+                    ->options([
+                        'pending' => 'Pending',
+                        'approved' => 'Approved',
+                        'rejected' => 'Rejected',
+                    ])
+                    ->required(),
                 TextInput::make('total_payment')
                     ->label('Total Payment')
                     ->numeric()
@@ -60,6 +64,14 @@ class RefundResource extends Resource
                 TextColumn::make('id')->sortable()->label('ID'),
                 TextColumn::make('booking_id')
                     ->label('Booking ID')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('booking.user.name')
+                    ->label('User Name')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('booking.venue.name')
+                    ->label('Venue Name')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('refund_date_time')

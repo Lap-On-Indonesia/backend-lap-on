@@ -6,10 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Transaction;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Booking extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -80,5 +81,18 @@ class Booking extends Model
     public function venue()
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    public function refund()
+    {
+        return $this->hasOne(Refund::class);
+    }
+
+    public function isEligibleForRefund()
+    {
+        $bookingDateTime = Carbon::parse($this->booking_date . ' ' . $this->start_time);
+        $now = Carbon::now();
+
+        return $now->diffInHours($bookingDateTime, false) >= 24;
     }
 }

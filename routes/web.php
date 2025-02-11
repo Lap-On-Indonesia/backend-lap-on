@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\RegisterOwnerController;
 use App\Http\Controllers\RegisterOwnerMarketplaceController;
+use App\Http\Controllers\LandingPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,10 +33,13 @@ use App\Http\Controllers\RegisterOwnerMarketplaceController;
 //         Route::get('/', [PageController::class, 'admin']);
 //     }
 // );
-Route::get('/', function () {
-    // return redirect('/admin');
-    return view('landingpage');
-});
+
+// Route::get('/', function () {
+//     // return redirect('/admin');
+//     return view('landingpage');
+// });
+
+Route::get('/', [LandingPageController::class, 'show'])->name('landingpage.show');
 
 Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.store');
 
@@ -55,3 +59,7 @@ Route::post('/register-owner-marketplace', [RegisterOwnerMarketplaceController::
 // Route::get('/kpr/form', function () {
 //     return view('kpr.form');
 // })->name('kpr.form');
+
+Route::get('/success-payment', function() {
+    return view('success-payment');
+});
