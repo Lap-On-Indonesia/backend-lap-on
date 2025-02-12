@@ -71,16 +71,9 @@
                                     <li class="nav-item">
                                         <a class="" href="#contact">Contact</a>
                                     </li>
-<<<<<<< HEAD
-                                    <li class="nav-item">
-                                        <a class=""
-                                            href="https://drive.google.com/drive/folders/1che9ap7cNVGCohuhpy9huFpD6k0oELJR">Download</a>
-                                    </li>
-=======
                                     @foreach($links as $link)
                                         <li class="nav-item"><a href="{{ $link->link }}" target="_blank">Download</a></li>
                                     @endforeach
->>>>>>> 5d1edfe4b945f0a07eedf99493302f0c8c65bef1
                                 </ul>
                             </div>
                         </nav>
