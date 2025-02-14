@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id'); // Kolom id sebagai primary key dan auto-increment
             $table->string('product_id')->unique(); // Kolom product_id yang unik
-            $table->string('name_product');
+            $table->string('name_product', 50);
             $table->string('image');
             $table->foreignId('category_marketplace_id')->constrained()->onDelete('cascade');
             $table->text('description')->nullable();

@@ -17,6 +17,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Repeater;
 
 
 class ProductResource extends Resource
@@ -68,6 +69,17 @@ class ProductResource extends Resource
                     ->numeric()
                     ->minValue(0)
                     ->required(),
+                Repeater::make('variations')
+                    ->label('Variasi Produk')
+                    ->relationship('variations')
+                    ->schema([
+                        TextInput::make('material')->label('Bahan')->required(),
+                        TextInput::make('size')->label('Ukuran')->required(),
+                        TextInput::make('price')->label('Harga')->numeric()->required(),
+                        TextInput::make('stock')->label('Stok')->numeric()->minValue(0)->required(),
+                    ])
+                    ->collapsible()
+                    ->grid(2),
             ]);
     }
 

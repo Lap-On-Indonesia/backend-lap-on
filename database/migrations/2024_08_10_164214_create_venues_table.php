@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('owner_id');
             $table->unsignedBigInteger('category_id');
-            $table->string('name');
+            $table->string('name', 50);
             $table->text('description');
             $table->string('image');
-            $table->string('address');
+            $table->string('address', 100);
             $table->string('link_maps');
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();

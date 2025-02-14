@@ -99,7 +99,9 @@ Route::delete('notifications/{id}', [NotificationController::class, 'destroy']);
 
 Route::get('products', [ProductController::class, 'index']);
 Route::get('products/{id}', [ProductController::class, 'show']);
+Route::post('checkout', [ProductController::class, 'checkout']);
 Route::get('product/category/{category_marketplace_id}', [ProductController::class, 'showbyCategoryId']);
+
 
 
 Route::get('category-marketplaces', [CategoryMarketplaceController::class, 'index']);

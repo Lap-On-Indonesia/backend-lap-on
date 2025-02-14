@@ -64,5 +64,10 @@ class Product extends Model
         return $this->hasMany(TransactionMarketplace::class);
     }
 
-    
+    public function variations()
+    {
+        return $this->hasMany(ProductVariation::class, 'product_id');
+    }
+
+
 }

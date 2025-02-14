@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             // $table->string('first_name');
             // $table->string('last_name');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone')->nullable();
+            $table->string('name', 50);
+            $table->string('email', 50)->unique();
+            $table->string('phone', 16)->nullable();
 
             // $table->foreignId('owner_id')->nullable()->constrained('owners')->onDelete('cascade');
             // $table->foreignId('owner_marketplace_id')->nullable()->constrained('owner_marketplace')->onDelete('cascade');

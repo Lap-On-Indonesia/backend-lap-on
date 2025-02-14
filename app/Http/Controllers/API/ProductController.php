@@ -4,25 +4,26 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Models\ProductVariation;
 use App\Helpers\ResponseFormatter;
 use App\Models\CategoryMarketplace;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
-    
+
 
     // Mendapatkan daftar produk
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('variations')->get();
         return ResponseFormatter::success($products, 'Products retrieved successfully');
     }
 
     // Mendapatkan produk berdasarkan ID
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with('variations')->findOrFail($id);
         return ResponseFormatter::success($product, 'Product retrieved successfully');
     }
 
@@ -61,4 +62,30 @@ class ProductController extends Controller
             return ResponseFormatter::success($products, 'All products retrieved successfully');
         }
     }
+
+    public function checkout(Request $request)
+    {
+        $request->validate([
+            'product_variation_id' => 'required|exists:product_variations,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $variation = ProductVariation::findOrFail($request->product_variation_id);
+
+        if ($variation->stock < $request->quantity) {
+            return ResponseFormatter::error(null, 'Stock not available', 400);
+        }
+
+        return ResponseFormatter::success([
+            'product' => $variation->product->name_product,
+            'variation' => [
+                'material' => $variation->material,
+                'size' => $variation->size,
+                'price' => $variation->price,
+                'quantity' => $request->quantity,
+                'total_price' => $variation->price * $request->quantity,
+            ]
+        ], 'Checkout successful');
+    }
+
 }

@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('owner_marketplaces', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->string('email', 100)->unique();
-            $table->string('phone', 20);
+            $table->string('name', 50);
+            $table->string('email', 50)->unique();
+            $table->string('phone', 16);
             $table->string('photo_profile', 255)->nullable();
             $table->string('photo_ktp', 255)->nullable();
-            $table->string('no_rekening')->nullable();
-            $table->string('store_name');
-            $table->string('store_address');
+            $table->string('no_rekening', 50)->nullable();
+            $table->string('store_name', 50);
+            $table->string('store_address', 100);
             $table->string('photo_store')->nullable();
             $table->enum('status', ['pending', 'accept', 'reject'])->default('pending');
             $table->string('link_maps');
