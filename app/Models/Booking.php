@@ -95,4 +95,11 @@ class Booking extends Model
 
         return $now->diffInHours($bookingDateTime, false) >= 24;
     }
+
+    // Dalam model Booking
+public function report()
+{
+    return $this->hasOne(Report::class);
+}
+
 }

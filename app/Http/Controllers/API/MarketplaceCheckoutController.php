@@ -92,6 +92,17 @@ class MarketplaceCheckoutController extends Controller
                 'payment_url' => $paymentUrl,
             ]);
 
+            if ($transaction) {
+                // Kurangi stok produk
+                $product = Product::find($productId);
+                if ($product) {
+                    $product->decrement('stock', 1);
+                }
+
+                // Perbarui status transaksi
+                $transaction->update(['status' => 'paid']);
+            }
+
             DB::commit();
 
             // return response()->json([
