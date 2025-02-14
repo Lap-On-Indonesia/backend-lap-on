@@ -65,6 +65,22 @@ class TransactionMarketplaceController extends Controller
         return ResponseFormatter::success($transaction, 'Transaction created successfully', 201);
     }
 
+    public function updateShippingStatus(Request $request, $id)
+    {
+        $request->validate([
+            'shipping_status' => 'required|in:Menunggu konfirmasi,Sedang disiapkan,Sedang dikirim,Sampai tujuan',
+        ]);
 
+        $transaction = TransactionMarketplace::find($id);
+
+        if (!$transaction) {
+            return ResponseFormatter::error(null, 'Transaction not found', 404);
+        }
+
+        $transaction->shipping_status = $request->shipping_status;
+        $transaction->save();
+
+        return ResponseFormatter::success($transaction, 'Shipping status updated successfully');
+    }   
 
 }

@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('transaction-marketplaces', [TransactionMarketplaceController::class, 'index']);
     Route::get('transaction-marketplaces/{id}', [TransactionMarketplaceController::class, 'show']);
     Route::post('transaction-marketplaces', [TransactionMarketplaceController::class, 'store']);
+    Route::put('transactions/{id}/shipping-status', [TransactionMarketplaceController::class, 'updateShippingStatus']);
 
     Route::post('bookings', [BookingController::class, 'store']);
     Route::get('bookings', [BookingController::class, 'index']);

@@ -16,8 +16,9 @@ class TransactionMarketplace extends Model
         'status',
         'payment_url',
         'transaction_id',
-
+        'shipping_status',
     ];
+
 
     public function user()
     {
