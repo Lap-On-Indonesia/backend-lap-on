@@ -27,4 +27,19 @@ class Owner extends Model
     {
         return $this->hasOne(User::class);
     }
+
+    public function venue()
+    {
+        return $this->hasMany(Venue::class);
+    }
+
+    // public function schedule()
+    // {
+    //     return $this->hasMany(Schedule::class);
+    // }
+
+    // public function booking()
+    // {
+    //     return $this->hasMany(Booking::class);
+    // }
 }

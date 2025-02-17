@@ -16,6 +16,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionMarketplaceResource extends Resource
 {
@@ -111,5 +113,20 @@ class TransactionMarketplaceResource extends Resource
             'create' => Pages\CreateTransactionMarketplace::route('/create'),
             'edit' => Pages\EditTransactionMarketplace::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Jika pengguna adalah super_admin, tampilkan semua data
+        if (Auth::user()->hasRole('super_admin')) {
+            return $query;
+        }
+
+        // Jika bukan super_admin, filter data berdasarkan owner_id
+        return $query->whereHas('product', function (Builder $venueQuery) {
+            $venueQuery->where('owner_marketplace_id', Auth::user()->owner_marketplace_id);
+        });
     }
 }

@@ -10,6 +10,8 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ReportResource extends Resource
 {
@@ -83,5 +85,20 @@ class ReportResource extends Resource
             'index' => Pages\ListReports::route('/'),
             'create' => Pages\CreateReport::route('/create'), // Tambahkan halaman Create
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Jika pengguna adalah super_admin, tampilkan semua data
+        if (Auth::user()->hasRole('super_admin')) {
+            return $query;
+        }
+
+        // Jika bukan super_admin, filter data berdasarkan owner_id
+        return $query->whereHas('booking.venue', function (Builder $venueQuery) {
+            $venueQuery->where('owner_id', Auth::user()->owner_id);
+        });
     }
 }

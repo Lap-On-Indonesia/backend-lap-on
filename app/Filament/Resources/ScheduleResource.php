@@ -2,20 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ScheduleResource\Pages;
-use App\Filament\Resources\ScheduleResource\RelationManagers;
-use App\Models\Schedule;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use App\Models\Owner;
+use App\Models\Schedule;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\ScheduleResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\ScheduleResource\RelationManagers;
 
 class ScheduleResource extends Resource
 {
@@ -32,6 +35,7 @@ class ScheduleResource extends Resource
     {
         return $form
             ->schema([
+                
                 Select::make('venue_id')
                     ->relationship('venue', 'name')
                     ->required()
@@ -72,6 +76,8 @@ class ScheduleResource extends Resource
     {
         return $table
             ->columns([
+               
+
                 TextColumn::make('venue.name')
                     ->label('Venue')
                     ->sortable()
@@ -119,5 +125,34 @@ class ScheduleResource extends Resource
             'create' => Pages\CreateSchedule::route('/create'),
             'edit' => Pages\EditSchedule::route('/{record}/edit'),
         ];
+    }
+
+    // public static function getEloquentQuery(): Builder
+    // {
+    //     if (auth()->check() && auth()->user()->hasRole('super_admin')) {
+    //         return parent::getEloquentQuery();
+    //     }
+
+    //     if (auth()->check() && !empty(auth()->user()->owner_id)) {
+    //         return parent::getEloquentQuery()->where('owner_id', auth()->user()->owner_id);
+    //     }
+
+    //     // Default: Jika tidak memenuhi syarat, kembalikan query kosong
+    //     return parent::getEloquentQuery()->whereRaw('1 = 0');
+    // }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Cek apakah pengguna adalah super admin
+        if (Auth::user()->hasRole('super_admin')) {
+            return $query;
+        }
+
+        // Jika bukan super admin, filter booking berdasarkan venue yang dimiliki oleh owner
+        return $query->whereHas('venue', function (Builder $venueQuery) {
+            $venueQuery->where('owner_id', Auth::user()->owner_id);
+        });
     }
 }

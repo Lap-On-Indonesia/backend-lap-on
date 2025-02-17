@@ -14,7 +14,10 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn; // Pastikan untuk mengimpor ImageColumn
+use Filament\Tables\Columns\ImageColumn;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+
 
 class RefundResource extends Resource
 {
@@ -104,5 +107,20 @@ class RefundResource extends Resource
             'create' => Pages\CreateRefund::route('/create'),
             'edit' => Pages\EditRefund::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Jika pengguna adalah super_admin, tampilkan semua data
+        if (Auth::user()->hasRole('super_admin')) {
+            return $query;
+        }
+
+        // Jika bukan super_admin, filter data berdasarkan owner_id
+        return $query->whereHas('booking.venue', function (Builder $venueQuery) {
+            $venueQuery->where('owner_id',Auth::user()->owner_id);
+        });
     }
 }
