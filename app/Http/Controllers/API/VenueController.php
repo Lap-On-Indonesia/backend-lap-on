@@ -25,7 +25,7 @@ class VenueController extends Controller
     public function show($id)
     {
         try {
-            $venue = Venue::with('owner', 'category', 'schedule')->findOrFail($id);
+            $venue = Venue::with('owner', 'category', 'schedule', 'field')->findOrFail($id);
 
             return ResponseFormatter::success($venue, 'Venue retrieved successfully');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {

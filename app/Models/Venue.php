@@ -74,4 +74,9 @@ class Venue extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+
+    public function field()
+    {
+        return $this->hasMany(Field::class);
+    }
 }
