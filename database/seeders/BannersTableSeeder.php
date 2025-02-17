@@ -16,22 +16,15 @@ class BannersTableSeeder extends Seeder
         DB::table('banners')->insert([
             [
                 'title' => 'Banner 1',
-                'image_url' => 'https://via.placeholder.com/800x400.png?text=Banner+1',
-                'link_url' => 'https://example.com',
+                'image_url' => 'banner/banner1.jpg',
+                'link_url' => 'https://laponid.com',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'Banner 2',
-                'image_url' => 'https://via.placeholder.com/800x400.png?text=Banner+2',
-                'link_url' => 'https://example.com',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'Banner 3',
-                'image_url' => 'https://via.placeholder.com/800x400.png?text=Banner+3',
-                'link_url' => 'https://example.com',
+                'image_url' => 'banner/banner2.jpg',
+                'link_url' => 'https://laponid.com',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
