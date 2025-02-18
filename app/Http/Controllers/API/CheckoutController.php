@@ -50,6 +50,7 @@ class CheckoutController extends Controller
                 'transaction_id' => $transactionId,
                 'user_id'        => Auth::id(),
                 'venue_id'       => $booking->venue_id,
+                'field_id'       => $booking->field_id,
                 'booking_id'     => $booking->id,
                 'total'          => $booking->total_payment, // Assuming you have a total amount field
                 'status'         => 'pending',

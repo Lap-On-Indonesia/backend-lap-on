@@ -27,6 +27,7 @@ class BookingController extends Controller
 
         $request->validate([
             'venue_id' => 'required|exists:venues,id',
+            'field_id' => 'required|exists:fields,id',
             'booking_date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',

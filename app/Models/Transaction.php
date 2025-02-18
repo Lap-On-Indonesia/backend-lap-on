@@ -12,6 +12,7 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'venue_id',
+        'field_id',
         'booking_id',
         'transaction_id',
         'total',
@@ -28,6 +29,11 @@ class Transaction extends Model
     public function venue()
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    public function field()
+    {
+        return $this->belongsTo(Field::class);
     }
 
     public function booking()

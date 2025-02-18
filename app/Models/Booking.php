@@ -15,6 +15,7 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'venue_id',
+        'field_id',
         'booking_date',
         'start_time',
         'end_time',
@@ -81,6 +82,11 @@ class Booking extends Model
     public function venue()
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    public function field()
+    {
+        return $this->belongsTo(Field::class);
     }
 
     public function refund()
