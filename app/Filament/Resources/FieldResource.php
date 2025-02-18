@@ -2,17 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\FieldResource\Pages;
+use Filament\Forms;
+use Filament\Tables;
 use App\Models\Field;
 use App\Models\Venue;
-use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\FieldResource\Pages;
 
 class FieldResource extends Resource
 {
@@ -44,6 +46,11 @@ class FieldResource extends Resource
                     ->label('Price')
                     ->numeric()
                     ->required(),
+                FileUpload::make('image')
+                    ->disk('public')
+                    ->directory('field')
+                    ->image()
+                    ->required(),
             ]);
     }
 
@@ -55,6 +62,10 @@ class FieldResource extends Resource
                     ->label('Venue')
                     ->sortable()
                     ->searchable(),
+                ImageColumn::make('image')
+                    ->label('Image')
+                    ->width(100)
+                    ->height(100),
                 TextColumn::make('name')
                     ->label('Field Name')
                     ->sortable()

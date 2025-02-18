@@ -14,6 +14,7 @@ class Field extends Model
         'name',
         'description',
         'price',
+        'image'
     ];
 
     public function venue()
