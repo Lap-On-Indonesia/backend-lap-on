@@ -40,17 +40,17 @@ class Booking extends Model
         });
 
         // Buat Transaction otomatis setelah Booking berhasil dibuat
-        static::created(function ($booking) {
-            Transaction::create([
-                'user_id' => $booking->user_id,
-                'venue_id' => $booking->venue_id,
-                'booking_id' => $booking->id,
-                'total' => $booking->total_payment,
-                'status' => 'pending', // Set default status
-                'payment_url' => null, // Jika nanti Anda integrasi dengan Midtrans, bisa diisi dengan payment URL
-                'tax_percentage' => 11,
-            ]);
-        });
+        // static::created(function ($booking) {
+        //     Transaction::create([
+        //         'user_id' => $booking->user_id,
+        //         'venue_id' => $booking->venue_id,
+        //         'booking_id' => $booking->id,
+        //         'total' => $booking->total_payment,
+        //         'status' => 'pending', // Set default status
+        //         'payment_url' => null, // Jika nanti Anda integrasi dengan Midtrans, bisa diisi dengan payment URL
+        //         'tax_percentage' => 11,
+        //     ]);
+        // });
     }
 
     // Function untuk menghitung total_payment

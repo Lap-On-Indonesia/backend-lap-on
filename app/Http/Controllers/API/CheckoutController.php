@@ -43,7 +43,7 @@ class CheckoutController extends Controller
 
             // Get booking details
             $booking = Booking::findOrFail($bookingId);
-            // dd($booking->price);
+            // dd($booking->field_id);
 
             // Create a transaction record
             $transaction = Transaction::create([
