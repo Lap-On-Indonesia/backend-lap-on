@@ -59,6 +59,10 @@ class TransactionMarketplaceResource extends Resource
                 TextInput::make('payment_url')
                     ->label('Payment URL')
                     ->required(),
+                Select::make('shipping_status')
+                    ->label('Shipping Status')
+                    ->options(['Menunggu konfirmasi', 'Sedang disiapkan', 'Sedang dikirim'])
+                    ->required(),
             ]);
     }
 
@@ -85,6 +89,8 @@ class TransactionMarketplaceResource extends Resource
                     ->label('Status'),
                 TextColumn::make('payment_url')
                     ->label('Payment URL'),
+                TextColumn::make('shipping_status')
+                    ->label('Shipping Status'),
             ])
             ->filters([
                 //
