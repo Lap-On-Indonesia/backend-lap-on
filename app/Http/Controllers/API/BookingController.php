@@ -57,7 +57,7 @@ class BookingController extends Controller
         }
 
         $durationInHours = $endTime->diffInHours($startTime);
-        $pricePerHour = $venue->price;
+        $pricePerHour = $request->total_payment;
         $taxPercentage = $request->tax_percentage ?? 11;
 
         $totalPayment = $durationInHours * $pricePerHour;

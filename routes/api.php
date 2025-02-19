@@ -69,7 +69,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/bookings/{bookingId}/refund', [RefundController::class, 'requestRefund']);
 
-    Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('checkout', [CheckoutController::class, 'store']);
     Route::post('checkout-marketplace', [MarketplaceCheckoutController::class, 'store'])->name('checkout.store');
 });
 
@@ -100,7 +100,7 @@ Route::delete('notifications/{id}', [NotificationController::class, 'destroy']);
 
 Route::get('products', [ProductController::class, 'index']);
 Route::get('products/{id}', [ProductController::class, 'show']);
-Route::post('checkout', [ProductController::class, 'checkout']);
+// Route::post('checkout', [ProductController::class, 'checkout']);
 Route::get('product/category/{category_marketplace_id}', [ProductController::class, 'showbyCategoryId']);
 
 
