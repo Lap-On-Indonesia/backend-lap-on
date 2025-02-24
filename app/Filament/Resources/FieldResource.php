@@ -22,10 +22,10 @@ class FieldResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
-    // public static function getNavigationGroup(): ?string
-    // {
-    //     return 'Admin Management';
-    // }
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Admin Management';
+    }
 
     public static function form(Forms\Form $form): Forms\Form
     {

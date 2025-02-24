@@ -79,6 +79,8 @@ Route::get('venues/{id}', [VenueController::class, 'show']);
 Route::put('venues/{id}', [VenueController::class, 'update']);
 Route::delete('venues/{id}', [VenueController::class, 'destroy']);
 Route::get('venues/category/{category_id}', [VenueController::class, 'showbyCategoryId']);
+Route::get('venues/{id}/coordinates', [VenueController::class, 'getVenueCoordinates']);
+
 
 Route::post('categories', [CategoryController::class, 'store']);
 Route::get('categories', [CategoryController::class, 'index']);

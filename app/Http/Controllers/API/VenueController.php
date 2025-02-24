@@ -64,4 +64,21 @@ class VenueController extends Controller
             return ResponseFormatter::success($venues, 'All venues retrieved successfully');
         }
     }
+
+    public function getVenueCoordinates($id)
+    {
+        try {
+            $venue = Venue::findOrFail($id);
+
+            $coordinates = [
+                'latitude' => $venue->latitude,
+                'longitude' => $venue->longitude
+            ];
+
+            return ResponseFormatter::success($coordinates, 'Venue coordinates retrieved successfully');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ResponseFormatter::error(null, 'Venue not found', 404);
+        }
+    }
+
 }

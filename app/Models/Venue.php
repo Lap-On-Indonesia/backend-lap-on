@@ -18,13 +18,13 @@ class Venue extends Model
         'link_maps',
         'latitude',
         'longitude',
-        'price', // Kolom price ditambahkan oleh migrasi
+        'price',
     ];
 
     protected $casts = [
         'latitude' => 'float',
         'longitude' => 'float',
-        'price' => 'decimal:2', // Cast price sebagai decimal dengan 2 desimal
+        'price' => 'decimal:2',
     ];
 
     protected static function boot()
