@@ -29,9 +29,11 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'address',
         'owner_id',
         'owner_marketplace_id',
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
