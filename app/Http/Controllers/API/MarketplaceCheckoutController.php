@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductVariation;
 use App\Models\TransactionMarketplace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,18 +40,21 @@ class MarketplaceCheckoutController extends Controller
 
             // Assume you get product ID from the request
             $productId = $this->request->product_id;
+            $variationId = $this->request->variation_id;
 
             // Get product details
+            $variation = ProductVariation::findOrFail($variationId);
             $product = Product::findOrFail($productId);
 
             // Calculate total amount (you can modify this if there are multiple products or discounts)
-            $grossAmount = $product->price;
+            $grossAmount = $variation->price;
 
             // Create a transaction record in transaction_marketplaces table
             $transaction = TransactionMarketplace::create([
                 'transaction_id' => $transactionId,
                 'user_id'        => Auth::id(),
                 'product_id'     => $productId,
+                'variation_id'   => $variationId,
                 'total'          => $grossAmount,
                 'status'         => 'pending',
             ]);
@@ -69,7 +73,7 @@ class MarketplaceCheckoutController extends Controller
                 'item_details' => [
                     [
                         'id'       => $productId,
-                        'price'    => $product->price,
+                        'price'    => $variation->price,
                         'quantity' => 1,
                         'name'     => $product->name_product,
                     ]

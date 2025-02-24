@@ -113,8 +113,9 @@ class AuthController extends BaseController
 
         $user->update([
             'name' => $request->name,
-            'email' => $request->email,
+            // 'email' => $request->email,
             'phone' => $request->phone,
+            'address' => $request->address,
         ]);
 
         return ResponseFormatter::success($user, 'Profile updated successfully');

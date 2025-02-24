@@ -12,6 +12,7 @@ class TransactionMarketplace extends Model
     protected $fillable = [
         'user_id',
         'product_id',
+        'variation_id',
         'total',
         'status',
         'payment_url',
@@ -28,5 +29,10 @@ class TransactionMarketplace extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function productVariation()
+    {
+        return $this->belongsTo(ProductVariation::class, 'variation_id');
     }
 }
