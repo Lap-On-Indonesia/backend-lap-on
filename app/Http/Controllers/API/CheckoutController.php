@@ -31,84 +31,100 @@ class CheckoutController extends Controller
     }
 
     public function store()
-    {
-        DB::beginTransaction();
+{
+    DB::beginTransaction();
 
-        try {
-            // Generate a unique transaction ID
-            $transactionId = 'TRX-' . Str::upper(Str::random(10));
+    try {
+        // Generate a unique transaction ID
+        $transactionId = 'TRX-' . Str::upper(Str::random(10));
 
-            // Assume you get booking ID from the request
-            $bookingId = $this->request->booking_id;
+        // Dapatkan array booking_id dari request
+        $bookingIds = $this->request->booking_id;
+        // dd($bookingIds);
 
-            // Get booking details
+        // Validasi bahwa bookingIds adalah array
+        if (!is_array($bookingIds) || empty($bookingIds)) {
+            return ResponseFormatter::error(null, 'Booking IDs must be provided as an array.', 422);
+        }
+
+        $totalAmount = 0;
+        $itemDetails = [];
+
+        foreach ($bookingIds as $bookingId) {
+            // Ambil detail booking
             $booking = Booking::findOrFail($bookingId);
-            // dd($booking->field_id);
 
-            // Create a transaction record
-            $transaction = Transaction::create([
+            // Hitung total pembayaran
+            $totalAmount += $booking->total_payment;
+
+            // Tambahkan detail item untuk Midtrans
+            $itemDetails[] = [
+                'id'       => $booking->id,
+                'price'    => $booking->total_payment,
+                'quantity' => 1,
+                'name'     => 'Booking for ' . $booking->venue->name,
+            ];
+
+            // Buat transaksi untuk setiap booking
+            Transaction::create([
                 'transaction_id' => $transactionId,
                 'user_id'        => Auth::id(),
                 'venue_id'       => $booking->venue_id,
                 'field_id'       => $booking->field_id,
                 'booking_id'     => $booking->id,
-                'total'          => $booking->total_payment, // Assuming you have a total amount field
+                'total'          => $booking->total_payment,
                 'status'         => 'pending',
             ]);
-
-            // Prepare payload for Midtrans
-            $payload = [
-                'transaction_details' => [
-                    'order_id'      => $transaction->id,
-                    'gross_amount'  => $transaction->total,
-                ],
-                'customer_details' => [
-                    'first_name'       => Auth::user()->name, // Mengambil nama pengguna yang login
-                    'email'            => Auth::user()->email, // Mengambil email pengguna yang login
-                    'phone'            => Auth::user()->phone, // Mengambil nomor telepon pengguna yang login
-                ],
-                'item_details' => [
-                    [
-                        'id'       => $booking->id,
-                        'price'    => $booking->total_payment, // Assuming each booking has a price
-                        'quantity' => 1,
-                        'name'     => 'Booking for ' . $booking->venue->name, // Assuming you have a venue relation
-                    ]
-                ]
-            ];
-
-            // Create snap token
-            $snapToken = Snap::getSnapToken($payload);
-
-            // Generate payment URL
-            $baseSnapUrl = config('services.midtrans.isProduction')
-                ? 'https://app.midtrans.com/snap/v2/vtweb/'
-                : 'https://app.sandbox.midtrans.com/snap/v2/vtweb/';
-
-            $paymentUrl = $baseSnapUrl . $snapToken;
-
-            // Save snap token and payment URL in the transaction
-            $transaction->update([
-                'payment_url' => $paymentUrl,
-            ]);
-
-            DB::commit();
-
-            // return response()->json([
-            //     'code' => 200,
-            //     'message' => 'Transaction created successfully',
-            //     'payment_url' => $paymentUrl
-            // ]);
-            return ResponseFormatter::success($transaction, 'Transaction successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Transaction creation failed',
-                'error' => $e->getMessage()
-            ], 500);
         }
+
+        // Siapkan payload untuk Midtrans
+        $payload = [
+            'transaction_details' => [
+                'order_id'      => $transactionId,
+                'gross_amount'  => $totalAmount,
+            ],
+            'customer_details' => [
+                'first_name' => Auth::user()->name,
+                'email'      => Auth::user()->email,
+                'phone'      => Auth::user()->phone,
+            ],
+            'item_details' => $itemDetails,
+        ];
+
+        // Generate snap token dari Midtrans
+        $snapToken = Snap::getSnapToken($payload);
+
+        // Generate payment URL
+        $baseSnapUrl = config('services.midtrans.isProduction')
+            ? 'https://app.midtrans.com/snap/v2/vtweb/'
+            : 'https://app.sandbox.midtrans.com/snap/v2/vtweb/';
+
+        $paymentUrl = $baseSnapUrl . $snapToken;
+
+        // Update transaksi dengan payment URL
+        Transaction::where('transaction_id', $transactionId)->update([
+            'payment_url' => $paymentUrl,
+        ]);
+
+        DB::commit();
+
+        // Return response sukses
+        return ResponseFormatter::success([
+            'transaction_id' => $transactionId,
+            'payment_url' => $paymentUrl,
+            'total_amount' => $totalAmount
+        ], 'Transaction successfully created with multiple bookings.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Transaction creation failed',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
 
     public function notificationHandler(Request $request)
 {

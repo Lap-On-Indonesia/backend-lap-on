@@ -21,65 +21,75 @@ class BookingController extends Controller
     }
 
     public function store(Request $request)
-{
-    try {
-        $userId = Auth::id();
-
-        $request->validate([
-            'venue_id' => 'required|exists:venues,id',
-            'field_id' => 'required|exists:fields,id',
-            'booking_date' => 'required|date',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-            'tax_percentage' => 'nullable|numeric',
-            'total_payment' => 'nullable|numeric',
-        ]);
-
-        $venue = Venue::find($request->venue_id);
-        $startTime = Carbon::parse($request->start_time);
-        $endTime = Carbon::parse($request->end_time);
-
-        // Cek apakah slot waktu sudah dipesan
-        $isBooked = Booking::where('venue_id', $request->venue_id)
-            ->where('booking_date', $request->booking_date)
-            ->where(function ($query) use ($startTime, $endTime) {
-                $query->whereBetween('start_time', [$startTime, $endTime])
-                      ->orWhereBetween('end_time', [$startTime, $endTime])
-                      ->orWhere(function ($query) use ($startTime, $endTime) {
-                          $query->where('start_time', '<', $startTime)
-                                ->where('end_time', '>', $endTime);
-                      });
-            })
-            ->exists();
-
-        if ($isBooked) {
-            return ResponseFormatter::error(null, 'Jadwal yang kamu pilih sudah dibooking, Silakan pilih jadwal lain', 422);
+    {
+        try {
+            $userId = Auth::id();
+    
+            // Validasi input
+            $request->validate([
+                'venue_id' => 'required|exists:venues,id',
+                'field_id' => 'required|exists:fields,id',
+                'booking_date' => 'required|date',
+                'time_slots' => 'required|array|min:1', // menerima array slot waktu
+                'time_slots.*.start_time' => 'required|date_format:H:i',
+                'time_slots.*.end_time' => 'required|date_format:H:i|after:time_slots.*.start_time',
+                'tax_percentage' => 'nullable|numeric',
+                'total_payment' => 'nullable|numeric',
+            ]);
+    
+            $venue = Venue::find($request->venue_id);
+            $taxPercentage = $request->tax_percentage ?? 11;
+    
+            $bookings = []; // Untuk menyimpan semua booking yang berhasil dibuat
+    
+            foreach ($request->time_slots as $slot) {
+                $startTime = Carbon::parse($slot['start_time']);
+                $endTime = Carbon::parse($slot['end_time']);
+    
+                // Validasi waktu tumpang tindih
+                $isBooked = Booking::where('venue_id', $request->venue_id)
+                    ->where('booking_date', $request->booking_date)
+                    ->where(function ($query) use ($startTime, $endTime) {
+                        $query->where('start_time', '<', $endTime)
+                              ->where('end_time', '>', $startTime);
+                    })
+                    ->exists();
+    
+                if ($isBooked) {
+                    return ResponseFormatter::error(null, "Slot waktu dari {$startTime->format('H:i')} sampai {$endTime->format('H:i')} sudah dibooking.", 422);
+                }
+    
+                // Hitung total pembayaran
+                $durationInHours = $endTime->diffInHours($startTime);
+                $pricePerHour = $venue->price;
+                $totalPayment = $durationInHours * $pricePerHour;
+                $taxAmount = $totalPayment * ($taxPercentage / 100);
+                $totalPaymentWithTax = $totalPayment + $taxAmount;
+    
+                // Membuat booking
+                $bookingData = [
+                    'user_id' => $userId,
+                    'venue_id' => $request->venue_id,
+                    'field_id' => $request->field_id,
+                    'booking_date' => $request->booking_date,
+                    'start_time' => $startTime->format('H:i:s'),
+                    'end_time' => $endTime->format('H:i:s'),
+                    'total_payment' => $totalPaymentWithTax,
+                    'tax_percentage' => $taxPercentage,
+                ];
+    
+                $booking = Booking::create($bookingData);
+                $bookings[] = $booking; // Menyimpan booking ke dalam array
+            }
+    
+            return ResponseFormatter::success($bookings, 'Booking berhasil dibuat untuk beberapa slot waktu.', 201);
+        } catch (\Exception $e) {
+            return ResponseFormatter::error(null, 'Gagal membuat booking: ' . $e->getMessage(), 500);
         }
-
-        $durationInHours = $endTime->diffInHours($startTime);
-        $pricePerHour = $request->total_payment;
-        $taxPercentage = $request->tax_percentage ?? 11;
-
-        $totalPayment = $durationInHours * $pricePerHour;
-        $taxAmount = $totalPayment * ($taxPercentage / 100);
-        $totalPaymentWithTax = $totalPayment + $taxAmount;
-
-        $data = $request->all();
-        $data['user_id'] = $userId;
-        $data['total_payment'] = $totalPaymentWithTax;
-        $data['tax_percentage'] = $taxPercentage;
-
-        if (!isset($data['total_payment']) || $data['total_payment'] === null) {
-            return ResponseFormatter::error(null, 'Total payment cannot be null', 422);
-        }
-
-        $booking = Booking::create($data);
-
-        return ResponseFormatter::success($booking, 'Booking created successfully', 201);
-    } catch (\Exception $e) {
-        return ResponseFormatter::error(null, 'Failed to create booking: ' . $e->getMessage(), 500);
     }
-}
+    
+
+
 
 
 
