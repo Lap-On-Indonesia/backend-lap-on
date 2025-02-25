@@ -97,28 +97,28 @@ class VenueResource extends Resource
                     ->prefix('IDR ')
                     ->suffix(',-'), // Menambahkan simbol mata uang dan koma
 
-                ViewField::make('map')
-                    ->view('components.map-view')
-                    ->label('Peta Lokasi')
-                    ->extraAttributes(function ($record) {
-                        Log::info('ExtraAttributes function called'); // Debugging
+                // ViewField::make('map')
+                //     ->view('components.map-view')
+                //     ->label('Peta Lokasi')
+                //     ->extraAttributes(function ($record) {
+                //         Log::info('ExtraAttributes function called'); // Debugging
 
-                        if ($record) {
-                            Log::info('Record Data:', $record->toArray()); // Log data untuk verifikasi
-                            return [
-                                'latitude' => (float) $record->latitude,
-                                'longitude' => (float) $record->longitude,
-                                'id' => $record->id,
-                            ];
-                        }
+                //         if ($record) {
+                //             Log::info('Record Data:', $record->toArray()); // Log data untuk verifikasi
+                //             return [
+                //                 'latitude' => (float) $record->latitude,
+                //                 'longitude' => (float) $record->longitude,
+                //                 'id' => $record->id,
+                //             ];
+                //         }
 
-                        Log::warning('Record is null'); // Jika record tidak tersedia
-                        return [
-                            'latitude' => -6.3437692, // Default latitude
-                            'longitude' => 106.6757172, // Default longitude
-                            'id' => null,
-                        ];
-                    }),
+                //         Log::warning('Record is null'); // Jika record tidak tersedia
+                //         return [
+                //             'latitude' => -6.3437692, // Default latitude
+                //             'longitude' => 106.6757172, // Default longitude
+                //             'id' => null,
+                //         ];
+                //     }),
             ]);
     }
 
@@ -157,14 +157,14 @@ class VenueResource extends Resource
                     ->label('Price')
                     ->money('IDR'), // Format harga dalam IDR
 
-                ViewColumn::make('map')
-                    ->view('components.map-view')
-                    ->label('Peta Lokasi')
-                    ->extraAttributes(fn ($record) => [
-                        'latitude' => (float) ($record->latitude ?? -6.3437692),
-                        'longitude' => (float) ($record->longitude ?? 106.6757172),
-                        'id' => $record->id ?? null,
-                    ]),
+                // ViewColumn::make('map')
+                //     ->view('components.map-view')
+                //     ->label('Peta Lokasi')
+                //     ->extraAttributes(fn ($record) => [
+                //         'latitude' => (float) ($record->latitude ?? -6.3437692),
+                //         'longitude' => (float) ($record->longitude ?? 106.6757172),
+                //         'id' => $record->id ?? null,
+                //     ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

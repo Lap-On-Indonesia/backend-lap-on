@@ -8,6 +8,7 @@ use App\Models\Field;
 use App\Models\Venue;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -88,6 +89,21 @@ class FieldResource extends Resource
             'create' => Pages\CreateField::route('/create'),
             'edit' => Pages\EditField::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Cek apakah pengguna adalah super admin
+        if (Auth::user()->hasRole('super_admin')) {
+            return $query;
+        }
+
+        // Jika bukan super admin, filter booking berdasarkan venue yang dimiliki oleh owner
+        return $query->whereHas('venue', function (Builder $venueQuery) {
+            $venueQuery->where('owner_id', Auth::user()->owner_id);
+        });
     }
 }
 
