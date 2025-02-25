@@ -37,9 +37,22 @@ class ScheduleResource extends Resource
             ->schema([
                 
                 Select::make('venue_id')
-                    ->relationship('venue', 'name')
-                    ->required()
-                    ->label('Venue'),
+                ->label('Venue')
+                ->options(function () {
+                    // Cek jika user sedang login dan bukan super admin
+                    if (Auth::check() && !Auth::user()->hasRole('super_admin')) {
+                        $ownerId = Auth::user()->owner_id;
+            
+                        // Hanya menampilkan venue milik owner yang login
+                        return \App\Models\Venue::where('owner_id', $ownerId)->pluck('name', 'id');
+                    }
+            
+                    // Jika super_admin, tampilkan semua venue
+                    return \App\Models\Venue::all()->pluck('name', 'id');
+                })
+                ->searchable()
+                ->required(),
+            
                 Select::make('day_of_week')
                     ->options([
                         'monday' => 'Monday',

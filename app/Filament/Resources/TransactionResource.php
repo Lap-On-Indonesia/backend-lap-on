@@ -15,6 +15,9 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+
 
 class TransactionResource extends Resource
 {
@@ -128,5 +131,20 @@ class TransactionResource extends Resource
             'create' => Pages\CreateTransaction::route('/create'),
             'edit' => Pages\EditTransaction::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Cek apakah pengguna adalah super admin
+        if (Auth::user()->hasRole('super_admin')) {
+            return $query;
+        }
+
+        // Jika bukan super admin, filter booking berdasarkan venue yang dimiliki oleh owner
+        return $query->whereHas('venue', function (Builder $venueQuery) {
+            $venueQuery->where('owner_id', Auth::user()->owner_id);
+        });
     }
 }
