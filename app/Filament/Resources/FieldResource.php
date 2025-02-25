@@ -95,15 +95,16 @@ class FieldResource extends Resource
     {
         $query = parent::getEloquentQuery();
 
-        // Cek apakah pengguna adalah super admin
+        // Super Admin dapat melihat semua data
         if (Auth::user()->hasRole('super_admin')) {
             return $query;
         }
 
-        // Jika bukan super admin, filter booking berdasarkan venue yang dimiliki oleh owner
+        // Filter data hanya untuk owner dari venue yang sesuai dengan user saat ini
         return $query->whereHas('venue', function (Builder $venueQuery) {
-            $venueQuery->where('owner_id', Auth::user()->owner_id);
+            $venueQuery->where('owner_id', Auth::id());
         });
     }
+
 }
 
